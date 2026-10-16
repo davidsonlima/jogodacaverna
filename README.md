@@ -1,4 +1,6 @@
-[Open this project in 8bitworkshop](http://8bitworkshop.com/redir.html?platform=atari8-800&githubURL=https%3A%2F%2Fgithub.com%2Fdavidsonlima%2Fjogodacaverna&file=jogodacaverna.bas).
+[Link do jogo AQUI](https://davidsonlima.github.io/jogodacaverna/)
+
+[Link do projeto no 8bitworkshop AQUI](http://8bitworkshop.com/redir.html?platform=atari8-800&githubURL=https%3A%2F%2Fgithub.com%2Fdavidsonlima%2Fjogodacaverna&file=jogodacaverna.bas)
 
 # Jogo da Caverna
 
