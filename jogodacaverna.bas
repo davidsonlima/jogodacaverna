@@ -4,46 +4,52 @@ poke 710,0
 poke 712,$C4
 
 position 10,2
-? "JOGO DA CAVERNA"
+? "JOGO DA CAVERNA v0.2"
+
+position 7,3
+? "Atualizado em 16-Out-2026"
 
 position 2,5
-? "OBJETIVO:"
+? "Objetivos:"
 
 position 2,7
-? "COLETE AS MOEDAS *"
+? "- Colete as moedas *"
 
 position 2,8
-? "DESTRUA O INIMIGO X"
+? "- Destrua o inimigo X"
 
 position 2,9
-? "SOBREVIVA E FACA"
+? "- Sobreviva e faca 5000 pontos"
 
-position 2,10
-? "5000 PONTOS"
+position 2,12
+? "Controles:"
 
-position 2,13
-? "CONTROLES"
+position 2,14
+? "Setas = mover"
 
 position 2,15
-? "SETAS = MOVER"
+? "Shift = atirar"
 
 position 2,16
-? "SHIFT = ATIRAR"
+? "P = pause"
+
+position 2,18
+? " >Desenvolvido por"
 
 position 2,19
-? "DESENVOLVIDO POR"
+? " Davidson de Oliveira Lima (2026)"
 
-position 2,20
-? "DAVIDSON DE OLIVEIRA"
+position 13,20
+? " . davidsoneq@gmail.com"
 
-position 2,21
-? "LIMA (2026)"
+position 13,21
+? " . @davi.mpb"
 
-music=0
+position 13,22
+? " . github.com/davidsonlima"
+
 hiscore=0
-
-position 22,23
-? "RECORDE:";hiscore
+music=0
 
 repeat
 until strig(0)=0
@@ -59,17 +65,23 @@ repeat
 
   score=0
   vidas=3
+  ticks=0
 
-  px=2
+  px=3
   py=20
 
-  ex=35
+  ex=34
   ey=10
 
   cx=20
-  cy=5
+  cy=10
 
   shot=0
+
+  shotDX=1
+  shotDY=0
+  gun$=">"
+  
   shotX=0
   shotY=0
 
@@ -77,6 +89,7 @@ repeat
   shotDX=1
   shotDY=0
   enemyDelay=0
+  gun$=">"
 
   mset dpeek(88),960,0
 
@@ -129,7 +142,7 @@ repeat
       ? " PAUSE "
 
       repeat
-
+        
         pause 1
 
       until peek(764)=10
@@ -191,46 +204,66 @@ repeat
 
     ox=px
     oy=py
+    
+    gunx=px+shotDX
+    guny=py+shotDY
 
     s=stick(0)
 
     if s=11
-      if px>1
+      if px>2
         px=px-1
         shotDX=-1
         shotDY=0
+        gun$="<"
       endif
     endif
 
     if s=7
-      if px<38
+      if px<37
         px=px+1
         shotDX=1
         shotDY=0
+        gun$=">"
       endif
     endif
 
     if s=14
-      if py>1
+      if py>2
         py=py-1
         shotDX=0
         shotDY=-1
+        gun$="^"
       endif
     endif
 
     if s=13
-      if py<21
+      if py<20
         py=py+1
         shotDX=0
         shotDY=1
+        gun$="v"
       endif
     endif
 
     position ox,oy
     ? " "
 
+    position gunx,guny
+    ? " "
+
     position px,py
     ? "@"
+    
+    gunx=px+shotDX
+    guny=py+shotDY
+
+    position gunx,guny
+
+    if shotDX=1  then ? ">"
+    if shotDX=-1 then ? "<"
+    if shotDY=1  then ? "v"
+    if shotDY=-1 then ? "^"
 
     if strig(0)=0
 
@@ -354,8 +387,8 @@ repeat
             position ex,ey
             ? " "
 
-            ex=2+rand(35)
-            ey=1+rand(21)
+            ex=3+rand(33)
+            ey=2+rand(18)
 
             position ex,ey
             ? "X"
@@ -387,8 +420,8 @@ repeat
         position cx,cy
         ? " "
 
-        cx=1+rand(37)
-        cy=1+rand(21)
+        cx=3+rand(33)
+        cy=2+rand(18)
 
         position cx,cy
         ? "*"
@@ -407,11 +440,27 @@ repeat
         pause 30
         sound
 
-        px=2
+        position px,py
+        ? " "
+
+        position gunx,guny
+        ? " "
+
+        px=3
         py=20
+
+        shotDX=1
+        shotDY=0
+        gun$=">"
+
+        gunx=px+1
+        guny=py
 
         position px,py
         ? "@"
+
+        position gunx,guny
+        ? ">"
 
       endif
 
@@ -420,9 +469,26 @@ repeat
     if score>hiscore
       hiscore=score
     endif
+            
+    totalseg=ticks/10
+
+    hor=totalseg/3600
+    min=(totalseg mod 3600)/60
+    seg=totalseg mod 60
 
     position 0,0
-    ? "VIDAS:";vidas;" PONTOS:";score;" RECORDE:";hiscore;"   "
+    ? "Vidas:";vidas;" Pontos:";score;" Recorde:";hiscore
+            
+    position 27,1
+
+    if hor<10 then ? "0";
+    ? hor;":";
+
+    if min<10 then ? "0";
+    ? min;":";
+
+    if seg<10 then ? "0";
+    ? seg;
 
     if score>=5000
 
@@ -451,6 +517,7 @@ repeat
     endif
 
     pause 1
+    ticks=ticks+1
 
   until vidas=0
 
@@ -460,7 +527,7 @@ repeat
   ? "GAME OVER"
 
   position 10,14
-  ? "RECORDE:";hiscore
+? "Recorde:";hiscore
 
   sound 0,30,8,12
   pause 15
@@ -474,7 +541,7 @@ repeat
   sound
 
   position 8,15
-  ? "SHIFT=NOVO JOGO"
+? "Shift = novo jogo"
 
   repeat
   until strig(0)=0
