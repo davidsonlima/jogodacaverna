@@ -1,0 +1,331 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>8bitworkshop IDE</title>
+		<meta name="googlebot" content="noindex">
+		<meta name="viewport" content="width=700, initial-scale=1, user-scalable=no">
+		<style type="text/css" media="screen">
+		#emulator {
+		  position:absolute;
+		  left:0;
+		  top:0;
+		  width:100%;
+		  height:100%;
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		}
+		#emuscreen {
+		  flex-grow: 1;
+		}
+		.emuvideo {
+		  width: calc(100% - 70px);
+		  border-radius:20px;
+		  border: 4px solid #222;
+		  outline-color: #666;
+		  padding: 30px;
+		  background: #000;
+		}
+		.emuvideo:focus {
+		  outline:none;
+		  border-color:#888;
+		}
+
+		#touch{
+			position:fixed;
+			bottom:20px;
+			left:20px;
+			right:20px;
+
+			display:flex;
+			justify-content:space-between;
+			align-items:flex-end;
+
+			z-index:999999;
+		}
+
+		#dpad{
+			display:grid;
+
+			grid-template-columns:60px 60px 60px;
+			grid-template-rows:60px 60px 60px;
+
+			gap:4px;
+		}
+
+		.gamebtn{
+
+			width:48px;
+			height:48px;
+
+			font-size:24px;
+
+			border:none;
+			border-radius:14px;
+
+			background:#2a2a2a;
+
+			color:white;
+
+			font-size:28px;
+			font-family:Arial,sans-serif;
+
+			box-shadow:
+				inset 0 -4px 0 rgba(0,0,0,.4),
+				0 4px 12px rgba(0,0,0,.5);
+
+			cursor:pointer;
+		}
+
+		.gamebtn:active{
+
+			transform:translateY(2px);
+
+		}
+
+		.action{
+			display:flex;
+			gap:15px;
+		}
+
+		.fire{
+			width:70px;
+			height:70px;
+
+			border-radius:50%;
+
+			background:#d40000;
+
+			font-size:14px;
+		}
+
+		.pause{
+			width:55px;
+			height:55px;
+
+			background:#0044cc;
+		}
+
+		@media (max-width:768px){
+
+			.gamebtn{
+				width:70px;
+				height:70px;
+				font-size:28px;
+			}
+
+			.fire{
+				width:90px;
+				height:90px;
+			}
+		}
+		</style>
+		<script>
+		window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+		if (window.location.host.endsWith('8bitworkshop.com')) {
+		  ga('create', 'UA-54497476-9', 'auto');
+		  ga('set', 'anonymizeIp', true);
+		  ga('send', 'pageview');
+		}
+		</script>
+		<script async="" src="https://www.google-analytics.com/analytics.js"></script>
+		
+		<script>
+
+			window.addEventListener("pointerdown", function () {
+
+				try {
+
+					let ctx = new AudioContext();
+
+					ctx.resume();
+
+					console.log(
+						"AudioContext:",
+						ctx.state
+					);
+
+				} catch(e) {
+
+					console.log(e);
+
+				}
+
+			}, { once: true });
+
+		</script>
+		
+	</head>
+	<body style="background-color: rgb(85, 85, 85);">
+
+		<div id="emulator">
+		<!-- emulator video -->
+		<div id="emuscreen">
+		  <div id="javatari-div" style="margin:10px; display:none">
+			<div id="javatari-screen" style="margin: 0 auto; box-shadow: 2px 2px 10px rgb(60, 60, 60);"></div>
+			<div id="javatari-console-panel" style="margin: 0 auto; box-shadow: 2px 2px 10px rgb(60, 60, 60);"></div>
+		  </div>
+		</div>
+		
+		<div id="touch">
+
+			<div id="dpad">
+
+				<div></div>
+
+				<button class="gamebtn"
+					onpointerdown="hold('ArrowUp','ArrowUp',38)"
+					onpointerup="releaseKey()"
+					onpointerleave="releaseKey()">
+					↑
+				</button>
+
+				<div></div>
+
+				<button class="gamebtn"
+					onpointerdown="hold('ArrowLeft','ArrowLeft',37)"
+					onpointerup="releaseKey()"
+					onpointerleave="releaseKey()">
+					←
+				</button>
+
+				<div></div>
+
+				<button class="gamebtn"
+					onpointerdown="hold('ArrowRight','ArrowRight',39)"
+					onpointerup="releaseKey()"
+					onpointerleave="releaseKey()">
+					→
+				</button>
+
+				<div></div>
+
+				<button class="gamebtn"
+					onpointerdown="hold('ArrowDown','ArrowDown',40)"
+					onpointerup="releaseKey()"
+					onpointerleave="releaseKey()">
+					↓
+				</button>
+
+				<div></div>
+
+			</div>
+
+			<div class="action">
+
+				<button class="gamebtn fire"
+					onclick="send('Shift','ShiftLeft',16)">
+					🔥
+				</button>
+
+				<button class="gamebtn pause"
+					onclick="send('P','KeyP',80)">
+					⏸
+				</button>
+
+			</div>
+
+		</div>
+
+	<script src="jquery/jquery.min.js"></script>
+
+	<script src="tss/js/tss/PsgDeviceChannel.js"></script>
+	<script src="tss/js/tss/MasterChannel.js"></script>
+	<script src="tss/js/tss/AudioLooper.js"></script>
+	<script src="tss/js/Log.js"></script>
+	<script src="lib/liblzg.js"></script>
+
+	<script src="gen/embedui.js" type="module"></script>
+	<script>
+	let audioUnlocked = false;
+
+	function unlockAudio(){
+
+		if(audioUnlocked)
+			return;
+
+		audioUnlocked = true;
+
+		try{
+
+			if(window.platform)
+				platform.resume();
+
+		}catch(e){
+			console.log(e);
+		}
+	}
+	
+	let holdTimer = null;
+
+	function getCanvas() {
+
+		const canvases =
+			document.querySelectorAll("canvas");
+
+		if (!canvases.length)
+			return null;
+
+		return canvases[canvases.length - 1];
+	}
+
+	function send(key,code,keyCode){
+
+		unlockAudio();
+
+		const c =
+			document.querySelector("canvas");
+
+		if(!c)
+			return;
+
+		c.focus();
+
+		c.dispatchEvent(
+			new KeyboardEvent("keydown",{
+				key:key,
+				code:code,
+				keyCode:keyCode,
+				which:keyCode,
+				bubbles:true
+			})
+		);
+
+		setTimeout(()=>{
+
+			c.dispatchEvent(
+				new KeyboardEvent("keyup",{
+					key:key,
+					code:code,
+					keyCode:keyCode,
+					which:keyCode,
+					bubbles:true
+				})
+			);
+
+		},60);
+	}
+
+	function hold(key,code,keyCode){
+
+		send(key,code,keyCode);
+
+		releaseKey();
+
+		holdTimer = setInterval(() => {
+
+			send(key,code,keyCode);
+
+		},50);
+	}
+
+	function releaseKey(){
+
+		clearInterval(holdTimer);
+
+		holdTimer = null;
+	}
+	</script>
+	<div id="extension-begak"></div>
+	</body>
+</html>
