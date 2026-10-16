@@ -121,6 +121,10 @@ footer{
     color:#999;
 }
 
+footer p{
+    margin:10px 0;
+}
+
 #gameFrame{
     display:block;
     margin:0 auto;
@@ -138,7 +142,13 @@ footer{
 <div class="gamebox">
 
 <p>
-Desenvolvido por Davidson de Oliveira Lima
+Desenvolvido por
+<b>
+    <a href="https://www.instagram.com/davi.mpb"
+       target="_blank">
+       Davidson de Oliveira Lima
+    </a>
+</b>.
 </p>
 
 <p>
@@ -151,9 +161,54 @@ Colete moedas, destrua inimigos e alcance 5000 pontos!
 
 </div>
 
-<h2>Jogar Online</h2>
+<div style="
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+">
 
+    <b>💚 Apoie o Projeto:</b>
 
+<div style="
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+">
+
+    <img
+        src="pix-qrcode.png"
+        alt="QR Code PIX"
+        style="
+            width:100px;
+            height:100px;
+            border:3px solid #00ff00;
+            background:white;
+            padding:5px;
+        ">
+
+    <button class="button" onclick="copiarPix()">
+        Copiar PIX
+    </button>
+
+</div>
+
+    <a href="https://www.buymeacoffee.com/davidsonlima" target="_blank">
+        <img
+            src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=davidsonlima&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff"
+            alt="Buy Me a Coffee">
+    </a>
+
+</div>
+
+<h2>Controles</h2>
+
+<ul>
+	<li>⬅ ➡ ⬆ ⬇ = Movimento</li>
+	<li>Shift = Atira</li>
+	<li>P = Pause</li>
+</ul>
 
 <div id="gameWrapper" class="game-wrapper">
 
@@ -175,12 +230,6 @@ Modo Tela Cheia
 </iframe>
 
 </div>
-
-<h2>Controles</h2>
-
-<ul>
-	<li>⬅ ➡ ⬆ ⬇ = Movimento</li>
-</ul>
 
 
 <h2>Screenshots</h2>
@@ -207,6 +256,10 @@ Modo Tela Cheia
 
 </div>
 
+<h2>Para Desenvolvedores</h2>
+
+<div>
+
 <a class="button" href="jogodacaverna.rom">
 Baixar ROM Atari
 </a>
@@ -216,11 +269,41 @@ href="https://github.com/davidsonlima/jogodacaverna">
 Código Fonte
 </a>
 
+</div>
+
+<h2>Contato</h2>
+
+<a class="button"
+   href="mailto:davidsoneq@gmail.com"> E-mail
+</a>
+
+<a class="button"
+   href="https://www.instagram.com/davi.mpb"
+   target="_blank"> Instagram
+</a>
+
+<a class="button"
+   href="https://github.com/davidsonlima"
+   target="_blank"> GitHub
+</a>
+
 <footer>
 
-Jogo da Caverna © 2026
-<br>
-Davidson de Oliveira Lima
+    <p>
+        Jogo da Caverna © 2026
+        <br>
+        Davidson de Oliveira Lima
+    </p>
+
+    <p>
+        <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fdavidsonlima.github.io%2Fjogodacaverna%2F"
+           target="_blank">
+
+            <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fdavidsonlima.github.io%2Fjogodacaverna%2F&label=Visitantes&labelColor=%2300aa00&countColor=%23d9e3f0"
+                 alt="Contador de visitantes">
+
+        </a>
+    </p>
 
 </footer>
 
@@ -233,6 +316,16 @@ function toggleGame(){
         .classList
         .toggle("fullscreen");
 
+}
+
+function copiarPix() {
+
+    const pix =
+"00020126360014br.gov.bcb.pix0114+55219769108465204000053039865802BR5925DAVIDSON DE OLIVEIRA LIMA6009Sao Paulo62290525REC6AD19780E5C58419447557630495A3";
+
+    navigator.clipboard.writeText(pix);
+
+    alert("Código PIX copiado!");
 }
 
 </script>
