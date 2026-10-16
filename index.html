@@ -5,6 +5,8 @@
 
 <meta charset="utf-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Jogo da Caverna</title>
 
 <style>
@@ -37,7 +39,8 @@ h2{
 }
 
 iframe{
-    width:760px;
+    width:100%;
+    max-width:760px;
     height:720px;
 }
 
@@ -131,6 +134,34 @@ footer p{
     transform:translateX(-15px);
 }
 
+@media (max-width: 768px){
+
+    h1{
+        font-size:32px;
+    }
+
+    iframe{
+        width:100%;
+        height:500px;
+    }
+
+    .gallery img{
+        width:100%;
+        max-width:300px;
+    }
+
+    .button{
+        width:100%;
+        max-width:300px;
+        text-align:center;
+        box-sizing:border-box;
+    }
+
+    #gameFrame{
+        transform:none;
+    }
+}
+
 </style>
 
 </head>
@@ -160,7 +191,7 @@ Colete moedas, destrua inimigos e alcance 5000 pontos!
 </p>
 
 <p style="font-size:12px;">
-    *A versão mais recente está disponível apenas para computadores ou adaptações com teclados Android que reconheçam os comandos.
+    *A versão mais recente está disponível apenas para computadores.
 </p>
 
 </div>
