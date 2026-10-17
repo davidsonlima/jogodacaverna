@@ -641,6 +641,15 @@
 		<script src="gen/embedui.js" type="module"></script>
 
 		<script>
+		
+		const params = new URLSearchParams(location.search);
+
+		if(!params.has("url")){
+
+			location.href =
+				"?p=atari8-800&url=jogodacaverna.rom";
+
+		}
 
 		/* ===== Áudio ===== */
 
