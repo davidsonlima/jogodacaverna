@@ -14,7 +14,7 @@
 		<style media="screen">
 
 			body{
-				background:#000;
+				background:#000 !important;
 				color:#00ff00;
 				font-family: "Courier New", monospace;
 				max-width:1100px;
@@ -729,14 +729,14 @@
 
 		/* ===== Palco do emulador: prende o canvas na moldura ===== */
 
-		const CANVAS_STYLE =
+		/*const CANVAS_STYLE =
 			"position:absolute !important;top:0 !important;left:0 !important;" +
 			"right:auto !important;bottom:auto !important;" +
 			"width:100% !important;height:100% !important;" +
 			"max-width:none !important;max-height:none !important;" +
 			"margin:0 !important;padding:0 !important;border:0 !important;" +
 			"display:block !important;float:none !important;transform:none !important;" +
-			"box-sizing:border-box;";
+			"box-sizing:border-box;"; */
 
 		let canvasStyleNormalized = null;
 		let watchedCanvas = null;
@@ -762,10 +762,10 @@
 			stage.style.setProperty("--ratio-num", (w / h).toFixed(4));
 
 			/* reaplica o estilo caso o emulador altere o atributo style */
-			if(canvasStyleNormalized === null || c.style.cssText !== canvasStyleNormalized){
-				c.style.cssText = CANVAS_STYLE;
+			/*if(canvasStyleNormalized === null || c.style.cssText !== canvasStyleNormalized){
+				 c.style.cssText = CANVAS_STYLE; 
 				canvasStyleNormalized = c.style.cssText;
-			}
+			}*/
 
 			/* observa mudanças de tamanho/estilo do canvas */
 			if(watchedCanvas !== c){
@@ -827,6 +827,10 @@
 				prompt("Copie o código PIX:", pix);
 			}
 		}
+		
+		window.addEventListener("load", () => {
+			document.body.style.backgroundColor = "#000";
+		});
 
 		</script>
 
