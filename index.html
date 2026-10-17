@@ -1,386 +1,835 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 
-<head>
-
-<meta charset="utf-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Jogo da Caverna v0.2</title>
-
-<style>
-
-body{
-    background:#000;
-    color:#00ff00;
-    font-family: "Courier New", monospace;
-    max-width:1100px;
-    margin:auto;
-    padding:20px;
-}
-
-h1{
-    color:#ffff00;
-    text-align:center;
-    font-size:48px;
-    text-shadow:0 0 15px #ffff00;
-}
-
-h2{
-    color:#00ffff;
-}
-
-.gamebox{
-    border:4px solid #00ff00;
-    padding:20px;
-    margin-bottom:20px;
-    background:#111;
-}
-
-iframe{
-    width:100%;
-    max-width:760px;
-    height:720px;
-}
-
-.game-wrapper{
-    text-align:center;
-}
-
-.game-wrapper.fullscreen{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100vw;
-    height:100vh;
-
-    background:#000;
-
-    z-index:9999;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-}
-
-.game-wrapper.fullscreen iframe{
-    width:90vw;
-    height:80vh;
-}
-
-.game-wrapper.fullscreen .button{
-    margin-bottom:20px;
-}
-
-
-.gallery{
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    flex-wrap:wrap;
-}
-
-.gallery a{
-    display:block;
-}
-
-.gallery img{
-    width:300px;
-    height:auto;
-    margin:0;
-    border:4px solid #00ff00;
-    transition:0.2s;
-}
-
-.gallery img:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 15px #00ff00;
-}
-
-.button{
-    display:inline-block;
-    padding:15px 25px;
-    background:#00aa00;
-    color:white;
-    text-decoration:none;
-    font-weight:bold;
-    border-radius:8px;
-    margin:10px;
-}
-
-.button:hover{
-    background:#00dd00;
-}
-
-a{
-    color:#ffff00;
-}
-
-footer{
-    margin-top:40px;
-    text-align:center;
-    color:#999;
-}
-
-footer p{
-    margin:10px 0;
-}
-
-#gameFrame{
-    display:block;
-    margin:0 auto;
-    transform:translateX(-15px);
-}
-
-@media (max-width: 768px){
-
-    h1{
-        font-size:32px;
-    }
-
-    iframe{
-        width:100%;
-        height:500px;
-    }
-
-    .gallery img{
-        width:100%;
-        max-width:300px;
-    }
-
-    .button{
-        width:100%;
-        max-width:300px;
-        text-align:center;
-        box-sizing:border-box;
-    }
-
-    #gameFrame{
-        transform:none;
-    }
-}
-
-</style>
-
-</head>
-
-<body>
-
-<h1>JOGO DA CAVERNA</h1>
-
-<div class="gamebox">
-
-<p>
-Desenvolvido por
-<b>
-    <a href="https://www.instagram.com/davi.mpb"
-       target="_blank">
-       Davidson de Oliveira Lima
-    </a>
-</b>.
-</p>
-
-<p>
-Jogo retrô para Atari 8-bit desenvolvido em FastBasic.
-</p>
-
-<p>
-Colete moedas, destrua inimigos e alcance 5000 pontos!
-</p>
-
-<p style="font-size:12px;">
-    *A versão mais recente está disponível apenas para computadores. Em celulares, é necessário conectar um teclado físico ou utilizar algum teclado virtual com setas e shift.
-</p>
-
-</div>
-
-<div style="
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:15px;
-    flex-wrap:wrap;
-">
-
-    <b>💚 Apoie o Projeto:</b>
-
-<div style="
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-">
-
-    <img
-        src="pix_qrcode.png"
-        alt="QR Code PIX"
-        style="
-            width:100px;
-            height:100px;
-            border:3px solid #00ff00;
-            background:white;
-            padding:5px;
-        ">
-
-    <button class="button" onclick="copiarPix()">
-        Copiar PIX
-    </button>
-
-</div>
-
-    <a href="https://www.buymeacoffee.com/davidsonlima" target="_blank">
-        <img
-            src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=davidsonlima&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff"
-            alt="Buy Me a Coffee">
-    </a>
-
-</div>
-
-<h2>Controles:</h2>
-
-<ul>
-	<li>Setas = Movimento</li>
-	<li>Shift = Atira</li>
-	<li>P = Pause</li>
-</ul>
-
-<div id="gameWrapper" class="game-wrapper">
-
-<p style="text-align:center">
-
-<button class="button" onclick="toggleGame()">
-Modo Tela Cheia
-</button>
-
-</p>
-
-<iframe
-    id="gameFrame"
-    width="900"
-    height="720"
-    src="https://8bitworkshop.com/v3.12.1/player.html?p=atari8-800&r=TFpHAAAgAAAADAamFo8OATdRX2saoR6hIqEroSihT6E%2FoUihRaE8oVuhc6FYoXChfqGdoZKh0KHkoQqiB6IjojSiqKKloqKit6L2ogijJ6Mao8KiyKI0o3Cjd6OAozujiaOXo6KjtqO0o8Oj6qNIpFqkZaS1pMSk3aQRpTylOaVOpX6lhKWQpZOlsKXMpdOlx6WFhYaGILWgqXCqqQydQgMgVuSKOOkQ0PGFoYWfhaCFACBDpbqGoqkohZBMhACZfwSKmacExpBgogCpIY3BpYaUhZWpIQqQAeiFloaXpZSFmBhlloWUqKWVhZlll4WVsDHM5QLt5gKwKaAAihhlmYWZmOiklvAJ0ALGmYiRmND7ytD2YJtyb3JyRSB5cm9tZU2boA25AaEg9aSIEPemoppg4AAQAyDco0yEAGuhGHmABEiKeagEqmhMggCkkIogq6CpAKpfVV8BAaIAXwKo0PaK0PNfy6ABsYWqiLGFpIXA%2FsjIhIWwIF%2FQogChheaF8BJfBqAAOKWFqnGFhYWKpoaQAuaGX4yqsYWolgBMd6GqX3uFpV88haSKkaRMY6GFmoabXw2k8AiFmYixpIWYYKWVkaSIpZSRpJiiAUzGoCCvobGakZio8AdrwojQ%2BVECbF8MmIWWGHGakAKp%2F5GYOOWW8OiopZYYZZiFmJDX5pmw0yC2pYWkhqWgALGkGGn%2FkaSwB8ixpF9BX3dAoqWappsknlEkBIJfSaaZJJ5w8V8EoADggJAFoIBfElEifYSepJC5gAS%2BqAQQBV8Lxp5RA6kQqQCFmaaX8B0GmiabKiaZqsWWpZnll5AIhZmK5Zaq5pqKiNDkYKaW8N9fmbAExZaQBOWW5pqI0O5gIKugUQKWloaXoAGxlqqIsZZRIx2RpMhRIgtRI0qIOJAYuaoEhZu5ggSFmlEEeAigAJADqf%2BqcZqRmkjIimvCqmikkMaQyCgwEhj5gASK%2BagEUBEwEVEiu4IA2VEFCe8w71Ejw1%2BK0PSKWagE0O7w219F1l%2BF0PDf5pDmkF8ZomCdSwMp8EkcnUoDSEipo0ipbaADnUQDaJ1Fa2FJa2FIA5hRRM6iAISgTIQAUzqbIJGjqQzQ6aSjjPsComDQ4KafqQBIoAfQz18Rhp9fHAprAapgpYUYaQJIpYZpXxVRRT%2BGhoWFXxhMGqFJAUqQ6aWFaQGQ7eaGsOm%2BgQSGmL6pBIaZvoAEhpa%2BqASoIOigTDajGEn%2FaQFIimuhAKpoYEi5gASFnLmoBIWduYFRIh%2BpBIWbaCAGpF9ihZ6KZZ6okALoyPA0hp7KGKWa5Z6Fmoplm4WbGKWcXwScimWdhZ3o6LGakZyI0PnmmvACxpvmnGuhnYjK0OlgqMjopRTFFPD8iND3ytD0TIQAUSKqogChUSKmKQOq8BOgA72tpC3mAhh9raTFlbAETA%2BhqI0AII0H1K0vAinjHbCkjS8CjB3QmA1vAinBjW8CvLKkjAEgoBGpAJkA0IgQ%2BkyEAPj8ABwMgECFVFEC4lW%2BqASGVkyCUQNioACxlvAMhZjIsZYg9aTEmND2XydfAmuhqL1KA4UqvUcDSL1GA0iYYKkghJmmn8mb0ASgAYShIOOkhKCkmcahEASpCYWhYKAAhpfIwBAqJpcQ%2BIWWrgrS5JatCtKFmOWXsPKKRphqiND6pphRAlRRZCpfAqAHUQKa0ogQ%2BmDggAiQUWIdhdSG1SCq2QbUKGbUIObYxvOgAMix8xD7KX%2BR85igAJHzpfOmUSIcSIpIa6GNAAGOAQEghFGCOWwAAYWYhplRRuoAsVFinkjIsZZlmapoUQRvUUP3sYXmhdAC5oaiUYP4YKkAqvAHIMagpZimmUhf95ilmYaZoAGRmIhokVECqQxeFgZEDEoMHsYCFsQeyAIWChoCYBwVSk9HTyBEQSBDQVZFUk5BIHYwLjKbYhYHGgNgHBpBdHVhbGl6YWRvIGVtIDE2LU91dC0yMDI2XxoCGgVgHAtPYmpldGl2b3M6X4sHYBwVLSBDb2xldGUgYXMgbW9lZGvBKl%2BVCGAcFi0gRGVzdHJ1YSBvIGluaW1pZ28gWF%2BWCWAcHy0gU29icmV2aXZhIGUgZmFjYSA1MDAwIHBvbnRvc1%2BfDGAcC0NfB3JvbGVRBW0OYBwOU2V0YXMgPSBtb3Zlcl%2BOD2AcD1NoaWZ0Xw5hdGlyYV%2FPEGAcClBfC3BhdXNlX4oSYBwTID5EZXNlbnZvbHZpZG8gcG9f5RNgHCIgRGFfDHNvbiBkZSBPbGl2ZWlyYSBMaW1hIChRIgMpXyINGhRgHBggLiBkUQUkZXFAZ21haWwuY29tX5gVYBwNXxhAX1kubXBiX40WYBwbXw1naXRodWJfYy9RBjhsaW1hm2J8AHwBFIQCXApUoacWWC4YwAMSVlEnuHwCfAMWA3oEfAVroQYWFHoHFiJ6CBYKeglfBApr4Qt8DA56DXwOag8cAT4ifBB8EQ56El%2BKfBNfzFEGTGoUEDQWFxA%2BVCeoDDIUYBwCI5tiFidRBgJAUhCoQmoUGgI0FhVfHEtRFBw0qEIwBjIHXwdAm2IwCDIJXwJYXwIKMgtfAiqbYgwgTRT8AlwaCjpSFqkW%2Fx78AhQC0mgMNAweCNIWAx4P0hQA0mgU3KxRCAkWBFpfjLRRDQxDpXByFg9RQgIIIFBBVVNFIJtiDlpRBlXIqFEEVV9yeFERRshRGUZrBJtiDnQBegEwARA6UjOpUQKeFLSGUQgtMAFRAl9MX9GgUQwRFDpSZV%2FRjFEMER46Un5f0XhRDBEoOlKXURMqMjpSsFETXDw6UslRE45GOlLiX9HcUQwRUDpS%2B1ETKlo4UgWqfAEwBnoVMAd6FjAGdA16FzAHdA56GBR4Alx6GTAZGgs6Uj2qMAYaAjhr4SgGDgRRRkw8Il8WBzpSXV9WJTZr4Q50BnoGUUlsXxgOOlJ7qjAHX3Z7qigHfA1fOF%2BWXl9WDTpSm19WFDZr4Q50B3pfWV%2FYdiIwFTIWYBwCIJtiMBcyGFEFAlFIW1EJpF%2BYMA0QOlLWqhwCPl8VDRAEOlLjXwU8XwUOXxHvXwR2X4RfEfxfBV6bYlFkUzarMAxrog56DDAGehAwB3oRMA16GjAOehtRQyhkUUooDFFEKA50E3oTFgR6HDADGmM4UkurFgNfhMc4UlerFgJfRBgrAThSY6sOXwQTMhw4UrmrfBNRZQ8gUYJUZgpUmKswBjIIOFKLqw50CHoIX0U2Uq%2BrKAhQr6swBzIJOFKlXxIJeglfRV%2BSCVFpUQwQOlKUrDAQMhFRJRMQdBp6EDARdBt6ETAQGiY4UuCrfAwwEBA2UulfQREaFThS81%2BCXwv8X0FRCzstX3syCF%2BKETIJa%2BIWGXQDegNRZJCMUQn%2BClFlkFERDHhRDQxRIiZRCZxRCPkDGiFmBnoIUaJ4a%2BFRCdF8DDAGMgo6UgCtMAcyC2viFgpRB39QUSqFUQVXX5EoURERUYV0UQhmClEFZgtRiI5RIm06Um9RAmQJa%2BIoBFEDRxRRCkceUQVHUUR0UUuIUaZzUUntUUL9FzAHehhRSaRf6FFCkQMyADhSe60wA3oAMAUaCip6HTAdGBAOKnoea%2BMsGjwqeh8wHRo8LHogDBJgHAZWaWRhczpiMARsYlGC51HjAV8HA18HCSBSZWNvcmRlXwgAbGIWm2QWGxBgMB4aCjZS3q0cATBiMB5fHwFfFx9fTPJfzB9RBQwgX0wGrl%2BMIGxiMAMYhxM4UpCuUa2PFgxRohQNVk9DRSBWRU5DRVUhm2JRIx1aUSodD1Ek%2BEZREQwyUREMHlENDFGjfjJaAA5aDnQFegUwBApUaqhRE4IKR0FNRSBPVkVSm2IWClHi9QhRDv9RBFpRSoJRBW48UREMUUuqUQaCCBoPYBwSNwYAN25vdm8gam9nb1GGLDCvUeeHClK8pwCp6qKlIH6gbAoAqYCir4WahpupgqIAhZyGnakSIAakqZJRBQ0AoiBfjQKiAF8PTEavYOaQrDQSNwQBw4SSoABsAKAAAP9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax5rG1CvAAV%2Frw%3D%3D"
-    frameborder="0"
-    allowfullscreen>
-</iframe>
+	<head>
+
+		<meta charset="utf-8">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<meta name="googlebot" content="noindex">
+
+		<title>Jogo da Caverna v0.2</title>
+
+		<style media="screen">
+
+			body{
+				background:#000;
+				color:#00ff00;
+				font-family: "Courier New", monospace;
+				max-width:1100px;
+				margin:auto;
+				padding:20px;
+				padding-bottom:190px;
+			}
+
+			h1{
+				color:#ffff00;
+				text-align:center;
+				font-size:48px;
+				text-shadow:0 0 15px #ffff00;
+			}
+
+			h2{
+				color:#00ffff;
+			}
+
+			.gamebox{
+				border:4px solid #00ff00;
+				padding:20px;
+				margin-bottom:20px;
+				background:#111;
+			}
+
+			.game-wrapper{
+				text-align:center;
+			}
+
+			#gameWrapper.fullscreen{
+				position:fixed;
+				top:0;
+				left:0;
+				width:100vw;
+				height:100vh;
+				max-width:none;
+				margin:0;
+
+				background:#000;
+
+				z-index:9999;
+
+				display:flex;
+				flex-direction:column;
+				justify-content:center;
+				align-items:center;
+			}
+
+			#gameWrapper.fullscreen .button{
+				margin-bottom:20px;
+			}
+
+			.gallery{
+				display:flex;
+				justify-content:center;
+				gap:20px;
+				flex-wrap:wrap;
+			}
+
+			.gallery a{
+				display:block;
+			}
+
+			.gallery img{
+				width:300px;
+				height:auto;
+				margin:0;
+				border:4px solid #00ff00;
+				transition:0.2s;
+			}
+
+			.gallery img:hover{
+				transform:scale(1.05);
+				box-shadow:0 0 15px #00ff00;
+			}
+
+			.button{
+				display:inline-block;
+				padding:15px 25px;
+				background:#00aa00;
+				color:white;
+				text-decoration:none;
+				font-weight:bold;
+				border:none;
+				border-radius:8px;
+				margin:10px;
+				font-family:inherit;
+				font-size:inherit;
+				cursor:pointer;
+			}
+
+			.button:hover{
+				background:#00dd00;
+			}
+
+			a{
+				color:#ffff00;
+			}
+
+			footer{
+				margin-top:40px;
+				text-align:center;
+				color:#999;
+			}
+
+			footer p{
+				margin:10px 0;
+			}
+
+			#gameWrapper{
+				max-width:800px;
+				margin:40px auto;
+			}
+
+			/* ===== Palco do emulador =====
+			   #emulator é uma "moldura" com proporção fixa (definida por JS
+			   a partir do tamanho real do canvas). O canvas é forçado a
+			   preencher a moldura, então nunca escapa do lugar. */
+
+			#emulator{
+				--ratio:4/3;
+				--ratio-num:1.3333;
+
+				position:relative;
+				width:min(100%, 640px);
+				aspect-ratio:var(--ratio);
+				margin:0 auto;
+
+				background:#000;
+				border-radius:20px;
+				overflow:hidden;
+				box-shadow:0 0 0 4px #222;
+			}
+
+			#emuscreen{
+				position:absolute;
+				top:0;
+				right:0;
+				bottom:0;
+				left:0;
+			}
+
+			#emuscreen canvas,
+			#emulator canvas,
+			canvas.emuvideo{
+				position:absolute !important;
+				top:0 !important;
+				left:0 !important;
+				right:auto !important;
+				bottom:auto !important;
+				width:100% !important;
+				height:100% !important;
+				max-width:none !important;
+				max-height:none !important;
+				margin:0 !important;
+				padding:0 !important;
+				border:0 !important;
+				display:block !important;
+				float:none !important;
+				transform:none !important;
+				box-sizing:border-box;
+				background:#000;
+			}
+
+			/* Tela cheia: a moldura cresce até caber na janela, mantendo a proporção */
+			#gameWrapper.fullscreen #emulator{
+				width:min(96vw, calc((100vh - 160px) * var(--ratio-num)));
+			}
+
+			/* ===== Controles de toque ===== */
+
+			#touch{
+
+				position:fixed;
+
+				left:0;
+				right:0;
+				bottom:10px;
+
+				max-width:640px;
+				margin:auto;
+
+				padding:0 20px;
+
+				display:flex;
+				justify-content:space-between;
+				align-items:flex-end;
+
+				z-index:999999;
+			}
+
+			#dpad{
+				display:grid;
+
+				grid-template-columns:70px 70px 70px;
+				grid-template-rows:70px 70px 70px;
+
+				gap:2px;
+			}
+
+			.gamebtn{
+				width:70px;
+				height:70px;
+
+				border:3px solid #555;
+				border-radius:10px;
+
+				background:
+					linear-gradient(
+						to bottom,
+						#4a4a4a,
+						#1a1a1a
+					);
+
+				color:#fff;
+
+				font-size:34px;
+				font-family:Arial,sans-serif;
+				font-weight:bold;
+
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,.12),
+					inset 0 -4px 0 rgba(0,0,0,.7),
+					0 6px 14px rgba(0,0,0,.7);
+
+				cursor:pointer;
+
+				touch-action:none;
+				user-select:none;
+
+				transition:all .08s;
+			}
+
+			.gamebtn:active{
+
+				transform:translateY(3px);
+
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,.08),
+					inset 0 -2px 0 rgba(0,0,0,.7),
+					0 2px 6px rgba(0,0,0,.7);
+			}
+
+			.action{
+				display:flex;
+				align-items:flex-end;
+				gap:12px;
+
+				margin-bottom:25px;
+			}
+
+			.fire{
+			
+				margin-bottom:0;
+
+				width:90px;
+				height:90px;
+
+				border-radius:50%;
+
+				border:4px solid #690000;
+
+				background:
+					radial-gradient(
+						circle at 35% 35%,
+						#ff5a5a,
+						#d10000 60%,
+						#7a0000
+					);
+
+				color:white;
+
+				font-size:34px;
+
+				box-shadow:
+					inset 0 3px 6px rgba(255,255,255,.3),
+					inset 0 -6px 6px rgba(0,0,0,.4),
+					0 6px 16px rgba(0,0,0,.8);
+			}
+
+			.pause{
+			
+				margin-bottom:12px;
+
+				width:60px;
+				height:60px;
+
+				border-radius:12px;
+
+				border:3px solid #333;
+
+				background:
+					linear-gradient(
+						to bottom,
+						#888,
+						#444
+					);
+
+				color:#fff;
+			}
+
+			/* Em aparelhos de toque, reserva espaço para os botões fixos não cobrirem o conteúdo */
+			@media not all and (hover:hover) and (pointer:fine){
+				body{
+					padding-bottom:260px;
+				}
+
+				#gameWrapper.fullscreen #emulator{
+					width:min(96vw, calc((100vh - 360px) * var(--ratio-num)));
+				}
+			}
+
+			/* Oculta os controles de toque em dispositivos com mouse (desktop) */
+			@media (hover:hover) and (pointer:fine){
+				#touch{
+					display:none;
+				}
+			}
+
+			@media (max-width: 768px){
+
+				h1{
+					font-size:32px;
+				}
+
+				.gallery img{
+					width:100%;
+					max-width:300px;
+				}
+
+				.button{
+					width:100%;
+					max-width:300px;
+					text-align:center;
+					box-sizing:border-box;
+				}
+
+				.gamebtn{
+					width:70px;
+					height:70px;
+					font-size:28px;
+				}
+
+				.fire{
+					width:90px;
+					height:90px;
+				}
+			}
+
+		</style>
+
+	</head>
+
+	<body>
+
+		<h1>JOGO DA CAVERNA</h1>
+
+		<div class="gamebox">
+
+		<p>
+		Desenvolvido por
+		<b>
+			<a href="https://www.instagram.com/davi.mpb"
+			   target="_blank" rel="noopener noreferrer">
+			   Davidson de Oliveira Lima
+			</a>
+		</b>.
+		</p>
+
+		<p>
+		Jogo retrô para Atari 8-bit desenvolvido em FastBasic.
+		</p>
+
+		<p>
+		Colete moedas, destrua inimigos e alcance 5000 pontos!
+		</p>
+
+		<p style="font-size:12px;">
+			*A versão mais recente está disponível para computadores e celulares.
+		</p>
+
+		</div>
+
+		<div style="
+			display:flex;
+			justify-content:center;
+			align-items:center;
+			gap:15px;
+			flex-wrap:wrap;
+		">
+
+			<b>💚 Apoie o Projeto:</b>
+
+			<div style="
+				display:flex;
+				flex-direction:column;
+				align-items:center;
+			">
+
+				<img
+					src="pix_qrcode.png"
+					alt="QR Code PIX"
+					style="
+						width:100px;
+						height:100px;
+						border:3px solid #00ff00;
+						background:white;
+						padding:5px;
+					">
+
+				<button type="button" class="button" onclick="copiarPix()">
+					Copiar PIX
+				</button>
+
+			</div>
+
+			<a href="https://www.buymeacoffee.com/davidsonlima" target="_blank" rel="noopener noreferrer">
+				<img
+					src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&amp;emoji=&amp;slug=davidsonlima&amp;button_colour=FFDD00&amp;font_colour=000000&amp;font_family=Cookie&amp;outline_colour=000000&amp;coffee_colour=ffffff"
+					alt="Buy Me a Coffee">
+			</a>
+
+		</div>
+
+		<h2>Controles:</h2>
+
+		<ul>
+			<li>Setas = Movimento</li>
+			<li>Shift = Atira</li>
+			<li>P = Pause</li>
+		</ul>
+
+		<div id="gameWrapper" class="game-wrapper">
+
+			<p style="text-align:center">
+
+				<button type="button" class="button" onclick="toggleGame()">
+					Modo Tela Cheia
+				</button>
+
+			</p>
+
+			<div id="emulator">
+
+				<!-- emulator video -->
+				<div id="emuscreen">
+					<div id="javatari-div" style="margin:10px; display:none">
+						<div id="javatari-screen" style="margin: 0 auto; box-shadow: 2px 2px 10px rgb(60, 60, 60);"></div>
+						<div id="javatari-console-panel" style="margin: 0 auto; box-shadow: 2px 2px 10px rgb(60, 60, 60);"></div>
+					</div>
+				</div>
+
+			</div><!-- fecha #emulator -->
+
+			<div id="touch">
+
+				<div id="dpad">
+
+					<div></div>
+
+					<button type="button" class="gamebtn"
+						onpointerdown="hold('ArrowUp','ArrowUp',38)"
+						onpointerup="releaseKey()"
+						onpointerleave="releaseKey()"
+						onpointercancel="releaseKey()">
+						↑
+					</button>
+
+					<div></div>
+
+					<button type="button" class="gamebtn"
+						onpointerdown="hold('ArrowLeft','ArrowLeft',37)"
+						onpointerup="releaseKey()"
+						onpointerleave="releaseKey()"
+						onpointercancel="releaseKey()">
+						←
+					</button>
 
-</div>
+					<div></div>
+
+					<button type="button" class="gamebtn"
+						onpointerdown="hold('ArrowRight','ArrowRight',39)"
+						onpointerup="releaseKey()"
+						onpointerleave="releaseKey()"
+						onpointercancel="releaseKey()">
+						→
+					</button>
+
+					<div></div>
+
+					<button type="button" class="gamebtn"
+						onpointerdown="hold('ArrowDown','ArrowDown',40)"
+						onpointerup="releaseKey()"
+						onpointerleave="releaseKey()"
+						onpointercancel="releaseKey()">
+						↓
+					</button>
+
+					<div></div>
+
+				</div><!-- fecha #dpad -->
+
+				<div class="action">
+
+					<button type="button" class="gamebtn fire"
+						onclick="send('Shift','ShiftLeft',16)">
+					</button>
+
+					<button type="button" class="gamebtn pause"
+						onclick="send('P','KeyP',80)"> ⏸
+					</button>
+
+				</div><!-- fecha .action -->
+
+			</div><!-- fecha #touch -->
+
+		</div><!-- fecha #gameWrapper -->
 
-<h2>Versões no 8bitworkshop IDE:</h2>
+		<h2>Versões no 8bitworkshop IDE:</h2>
+
+		<div>
+			<ul>
+				<li><a href="https://8bitworkshop.com/v3.12.1/player.html?p=atari8-800&amp;r=TFpHAAAgAAAADAamFo8OATdRX2saoR6hIqEroSihT6E%2FoUihRaE8oVuhc6FYoXChfqGdoZKh0KHkoQqiB6IjojSiqKKloqKit6L2ogijJ6Mao8KiyKI0o3Cjd6OAozujiaOXo6KjtqO0o8Oj6qNIpFqkZaS1pMSk3aQRpTylOaVOpX6lhKWQpZOlsKXMpdOlx6WFhYaGILWgqXCqqQydQgMgVuSKOOkQ0PGFoYWfhaCFACBDpbqGoqkohZBMhACZfwSKmacExpBgogCpIY3BpYaUhZWpIQqQAeiFloaXpZSFmBhlloWUqKWVhZlll4WVsDHM5QLt5gKwKaAAihhlmYWZmOiklvAJ0ALGmYiRmND7ytD2YJtyb3JyRSB5cm9tZU2boA25AaEg9aSIEPemoppg4AAQAyDco0yEAGuhGHmABEiKeagEqmhMggCkkIogq6CpAKpfVV8BAaIAXwKo0PaK0PNfy6ABsYWqiLGFpIXA%2FsjIhIWwIF%2FQogChheaF8BJfBqAAOKWFqnGFhYWKpoaQAuaGX4yqsYWolgBMd6GqX3uFpV88haSKkaRMY6GFmoabXw2k8AiFmYixpIWYYKWVkaSIpZSRpJiiAUzGoCCvobGakZio8AdrwojQ%2BVECbF8MmIWWGHGakAKp%2F5GYOOWW8OiopZYYZZiFmJDX5pmw0yC2pYWkhqWgALGkGGn%2FkaSwB8ixpF9BX3dAoqWappsknlEkBIJfSaaZJJ5w8V8EoADggJAFoIBfElEifYSepJC5gAS%2BqAQQBV8Lxp5RA6kQqQCFmaaX8B0GmiabKiaZqsWWpZnll5AIhZmK5Zaq5pqKiNDkYKaW8N9fmbAExZaQBOWW5pqI0O5gIKugUQKWloaXoAGxlqqIsZZRIx2RpMhRIgtRI0qIOJAYuaoEhZu5ggSFmlEEeAigAJADqf%2BqcZqRmkjIimvCqmikkMaQyCgwEhj5gASK%2BagEUBEwEVEiu4IA2VEFCe8w71Ejw1%2BK0PSKWagE0O7w219F1l%2BF0PDf5pDmkF8ZomCdSwMp8EkcnUoDSEipo0ipbaADnUQDaJ1Fa2FJa2FIA5hRRM6iAISgTIQAUzqbIJGjqQzQ6aSjjPsComDQ4KafqQBIoAfQz18Rhp9fHAprAapgpYUYaQJIpYZpXxVRRT%2BGhoWFXxhMGqFJAUqQ6aWFaQGQ7eaGsOm%2BgQSGmL6pBIaZvoAEhpa%2BqASoIOigTDajGEn%2FaQFIimuhAKpoYEi5gASFnLmoBIWduYFRIh%2BpBIWbaCAGpF9ihZ6KZZ6okALoyPA0hp7KGKWa5Z6Fmoplm4WbGKWcXwScimWdhZ3o6LGakZyI0PnmmvACxpvmnGuhnYjK0OlgqMjopRTFFPD8iND3ytD0TIQAUSKqogChUSKmKQOq8BOgA72tpC3mAhh9raTFlbAETA%2BhqI0AII0H1K0vAinjHbCkjS8CjB3QmA1vAinBjW8CvLKkjAEgoBGpAJkA0IgQ%2BkyEAPj8ABwMgECFVFEC4lW%2BqASGVkyCUQNioACxlvAMhZjIsZYg9aTEmND2XydfAmuhqL1KA4UqvUcDSL1GA0iYYKkghJmmn8mb0ASgAYShIOOkhKCkmcahEASpCYWhYKAAhpfIwBAqJpcQ%2BIWWrgrS5JatCtKFmOWXsPKKRphqiND6pphRAlRRZCpfAqAHUQKa0ogQ%2BmDggAiQUWIdhdSG1SCq2QbUKGbUIObYxvOgAMix8xD7KX%2BR85igAJHzpfOmUSIcSIpIa6GNAAGOAQEghFGCOWwAAYWYhplRRuoAsVFinkjIsZZlmapoUQRvUUP3sYXmhdAC5oaiUYP4YKkAqvAHIMagpZimmUhf95ilmYaZoAGRmIhokVECqQxeFgZEDEoMHsYCFsQeyAIWChoCYBwVSk9HTyBEQSBDQVZFUk5BIHYwLjKbYhYHGgNgHBpBdHVhbGl6YWRvIGVtIDE2LU91dC0yMDI2XxoCGgVgHAtPYmpldGl2b3M6X4sHYBwVLSBDb2xldGUgYXMgbW9lZGvBKl%2BVCGAcFi0gRGVzdHJ1YSBvIGluaW1pZ28gWF%2BWCWAcHy0gU29icmV2aXZhIGUgZmFjYSA1MDAwIHBvbnRvc1%2BfDGAcC0NfB3JvbGVRBW0OYBwOU2V0YXMgPSBtb3Zlcl%2BOD2AcD1NoaWZ0Xw5hdGlyYV%2FPEGAcClBfC3BhdXNlX4oSYBwTID5EZXNlbnZvbHZpZG8gcG9f5RNgHCIgRGFfDHNvbiBkZSBPbGl2ZWlyYSBMaW1hIChRIgMpXyINGhRgHBggLiBkUQUkZXFAZ21haWwuY29tX5gVYBwNXxhAX1kubXBiX40WYBwbXw1naXRodWJfYy9RBjhsaW1hm2J8AHwBFIQCXApUoacWWC4YwAMSVlEnuHwCfAMWA3oEfAVroQYWFHoHFiJ6CBYKeglfBApr4Qt8DA56DXwOag8cAT4ifBB8EQ56El%2BKfBNfzFEGTGoUEDQWFxA%2BVCeoDDIUYBwCI5tiFidRBgJAUhCoQmoUGgI0FhVfHEtRFBw0qEIwBjIHXwdAm2IwCDIJXwJYXwIKMgtfAiqbYgwgTRT8AlwaCjpSFqkW%2Fx78AhQC0mgMNAweCNIWAx4P0hQA0mgU3KxRCAkWBFpfjLRRDQxDpXByFg9RQgIIIFBBVVNFIJtiDlpRBlXIqFEEVV9yeFERRshRGUZrBJtiDnQBegEwARA6UjOpUQKeFLSGUQgtMAFRAl9MX9GgUQwRFDpSZV%2FRjFEMER46Un5f0XhRDBEoOlKXURMqMjpSsFETXDw6UslRE45GOlLiX9HcUQwRUDpS%2B1ETKlo4UgWqfAEwBnoVMAd6FjAGdA16FzAHdA56GBR4Alx6GTAZGgs6Uj2qMAYaAjhr4SgGDgRRRkw8Il8WBzpSXV9WJTZr4Q50BnoGUUlsXxgOOlJ7qjAHX3Z7qigHfA1fOF%2BWXl9WDTpSm19WFDZr4Q50B3pfWV%2FYdiIwFTIWYBwCIJtiMBcyGFEFAlFIW1EJpF%2BYMA0QOlLWqhwCPl8VDRAEOlLjXwU8XwUOXxHvXwR2X4RfEfxfBV6bYlFkUzarMAxrog56DDAGehAwB3oRMA16GjAOehtRQyhkUUooDFFEKA50E3oTFgR6HDADGmM4UkurFgNfhMc4UlerFgJfRBgrAThSY6sOXwQTMhw4UrmrfBNRZQ8gUYJUZgpUmKswBjIIOFKLqw50CHoIX0U2Uq%2BrKAhQr6swBzIJOFKlXxIJeglfRV%2BSCVFpUQwQOlKUrDAQMhFRJRMQdBp6EDARdBt6ETAQGiY4UuCrfAwwEBA2UulfQREaFThS81%2BCXwv8X0FRCzstX3syCF%2BKETIJa%2BIWGXQDegNRZJCMUQn%2BClFlkFERDHhRDQxRIiZRCZxRCPkDGiFmBnoIUaJ4a%2BFRCdF8DDAGMgo6UgCtMAcyC2viFgpRB39QUSqFUQVXX5EoURERUYV0UQhmClEFZgtRiI5RIm06Um9RAmQJa%2BIoBFEDRxRRCkceUQVHUUR0UUuIUaZzUUntUUL9FzAHehhRSaRf6FFCkQMyADhSe60wA3oAMAUaCip6HTAdGBAOKnoea%2BMsGjwqeh8wHRo8LHogDBJgHAZWaWRhczpiMARsYlGC51HjAV8HA18HCSBSZWNvcmRlXwgAbGIWm2QWGxBgMB4aCjZS3q0cATBiMB5fHwFfFx9fTPJfzB9RBQwgX0wGrl%2BMIGxiMAMYhxM4UpCuUa2PFgxRohQNVk9DRSBWRU5DRVUhm2JRIx1aUSodD1Ek%2BEZREQwyUREMHlENDFGjfjJaAA5aDnQFegUwBApUaqhRE4IKR0FNRSBPVkVSm2IWClHi9QhRDv9RBFpRSoJRBW48UREMUUuqUQaCCBoPYBwSNwYAN25vdm8gam9nb1GGLDCvUeeHClK8pwCp6qKlIH6gbAoAqYCir4WahpupgqIAhZyGnakSIAakqZJRBQ0AoiBfjQKiAF8PTEavYOaQrDQSNwQBw4SSoABsAKAAAP9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax5rG1CvAAV%2Frw%3D%3D" target="_blank" rel="noopener noreferrer">
+					Versão 0.2 (Atual)</a></li>
+				<li><a href="https://8bitworkshop.com/v3.12.1/player.html?p=atari8-800&amp;r=TFpHAAAgAAAACi4OFJd%2BARsfMzkSoRahGqEjoSChR6E3oUChPaE0oVOha6FQoWihdqGVoYqhqqGnocmhxqHDodihF6IpokiiO6LjoemhVaKRopiioaJcoqqiuKLDotei1aLkogujaaN7o4aj1qPlo%2F6jMqRdpFqkb6SfpKWksaS0pNGk7aT0pOikhYWGhiCtoKlwqqkMnUIDIFbkijjpENDxhaGFn4WghQAgZKS6hqKpKIWQTIQAmX8EipmnBMaQYKIAqSGN4qSGlIWVqRkKkAHohZaGl6WUhZgYZZaFlKillYWZZZeFlbAxzOUC7eYCsCmgAIoYZZmFmZjopJbwCdACxpmIkZjQ%2B8rQ9mCbcm9yckUgeXJvbWVNm6ANufmgIBakiBD3pqKaYOAAEAMg%2FaJMhAA5oRh5gARIinmoBKpoTIIApJCKIKOgqQCqM1UzAQGiADMCqND2itDzM8ugAbGFqoixhaSFwP7IyISFsCAz0KIAoYXmhfASMwagADilhapxhYWFiqaGkALmhjOMqrGFqJYATG%2BhqjN7haUzPIWkipGkTFuhINekhaSGpaAAsaQYaf%2BRpLAHyLGkM0EfBFMzV5aGlzMvlqqIsZYfA0aRpMgzdDOYiDiQGLmqBIWbuYIEhZq5gAS%2BqAQIoACQA6n%2FqnGakZpIyIo5wqpopJDGkMgoMBIY%2BYAEivmoBFARMBEfAuSCANkfBQnvMO8fA%2BwzitD0ilmoBNDu8NszRdYzhdDw3%2BaQ5pAzGaJgnUsDKfBJHJ1KA0hIqaJIqY6gA51EA2idRTlhSTlhSAOYHyT3ogCEoEyEAFM6myCyoqkM0Omko4z7AqJg0OCmn6kASKAH0M8zEYafMxwKOQGqYKWFGGkCSKWGaTMVHyVohoaFhTMYTBKhSQFKkOmlhWkBkO3mhrDpvoEEhpi%2BqQSGmb6ABIaWvqgEqCDgoExXohhJ%2F2kBSIo5oQCqaGBIuYAEhZy5qASFnbmBHyIfqQSFm2ggJ6MzYoWeimWeqJAC6MjwNIaeyhilmuWehZqKZZuFmxilnDMEnIplnYWd6OixmpGciND55prwAsab5pw5oZ2IytDpYKjI6KUUxRTw%2FIjQ98rQ9EyEAB8iqqIAoR8ipikDqvAToAO9zqMt5gIYfc6jxZWwBEwHoaiNACCNB9StLwIp4x3Ro40vAowd0JgNbwIpwY1vArzTo4wBIKARqQCZANCIEPpMhAD4%2FAAcDIBAhVQfAuJVvqgEhlZMgh8DYqAAsZbwDIWYyLGWIBakxJjQ9jMnMwI5oai9SgOFKr1HA0i9RgNImGCpIISZpp%2FJm9AEoAGEoSAEpISgpJnGoRAEqQmFoWCgAIaXyMAQKiaXEPiFlq4K0uSWrQrShZjll7DyikaYaojQ%2BqaYHwJUH0SrMwKgBx8CmtKIEPpg4IAIkB9iUoXUhtUgqtkG1Chm1CDm2MbzoADIsfMQ%2Byl%2FkfOYoACR86Xzph8iHEiKSDmhjQABjgEBIIQfYmJsAAGFmIaZH0bqALGWGGWYSMixlmWZqmgfBG8fQ%2FexheaF0ALmhqIhH4IhYKkAqvAHIL6gpZimmUgz95ilmYaZoAGRmIhokR8CqQxWFgY8DEIMHsYCFsQeyAIWChoCWBwQSk9HTyBEQSBDQVZFUk5Bm1oWAhoFWBwKT0JKRVRJVk86M4oHWBwTQ09MRVRFIEFTIE1PRUQ5wSozkwhYHBRERVNUUlVBIE8gSU5JTUlHTyBYM5QJWBwRU09CUkVWSVZBIEUgRkFDHwRaClgcDDUwMDAgUE9OVE9TM4wNWBwKQzMHUk9MRTPKD1gcDlNFVEFTID0gTU9WRVIzjhBYHA9TSElGVDMOQVRJUkEzzxNYHBFERVNFTlZPTFZJRE8gUE8z0RRYHBVEQTMLU09OIERFIE9MSVZFMy8zlRVYHAxMSU1BICgyMDI2KZtadAB0ARYWGhdYHAhSRUNPUkRFOlooAWRaFptcFIQCVApMTaYWWCYYwAMSTh8nQ3QCdAMWA3IEFgJyBRYUcgYWI3IHFgpyCDMECRYFcgp0C3QMdA0Ocg4Ocg90EHQRHwY5YhIQLBYXEDZMwKYMKhJYHAIjm1oWJx8GAjhKqaY6YhIaAiwWFTMc5B8UHM2mOigFKgYzB0CbWigHKggzAlgzAgkqCjMCKptaDCBNFPwCVBoKMkqvpxb%2FHvwCFALSYAwsDB4I0hYDHg%2FSFADSYBTcrB8ICRYEUjOMtB8NDGSkaGoWDxoMWBwIIFBBVVNFIJtaDlIfBlVhHwVVM3J4HxFGyB8ZRjkEm1oObAByACgAEDJKzKcfAp4UtIYfCC0oAB8CX%2BUz0aAfDBEUMkr%2BM9GMHwwRHjJKF6gzkXgfDBEoMkowM9EfDSoyMkpJM9EfDVw8MkpiM9EfDY5GMkp7M9HcHwwRUDJKlB8TKlowSp6odAAoBXITKAZyFBR4AlRyFSgVGgsySsOoKAUQMDnBJAUOBB9CJzMPBzJK3TMPGiYuOeEObAVyBR9DQTMSDjJK9KgoBjMp9KgkBnQPMyszTw0ySg6pKAYaFS454Q5sBnIzUzMSEyoUWBwCIJtaH0grH0TNXKkoCzmiDnILKAVyDCgGcg0oD3IWKBByFx8jtWQfKrUMHyS1DmwRchEWBHIYKAMaYzBKcakWAzOExzBKfakWAjNEGCsBMEqJqQ4zBBEqGDBK36l0ER9FnCAfYndeCky%2BqSgFKgcwSrGpDmwHcgczRS5K1akkB0jVqSgGKggwSsszEghyCDNFM5IIH0neCxAySrmqKAwqDR8F0AxsFnIMKA1sF3INKAwaJjBKBqp0CygMEC5KDzNBDRoVMEoZM4IzCyIzQR8LOy0zeyoHM4oNKgg54hYZbANyAx9kHYwfCf4KH2UdHxEMeB8NDB8iJh8JnB8J%2BRojXgZyBw4aFTnBHwnQdAsoBSoJMkojqygGKgo54hYKHwd%2BUB8qhB8FVjORKB8RER%2BFAB9iVBolXgZyCR8EZAofiBgfImoySmAfAmIIOeIkBB8DRRQfCkUeH2WnH4XYH4lpAyoBMEpsqygDcgEMElgcBlZJREFTOlooBGRaH4IeH6PWMwcDMwcJIB%2BrSRwEH2PrKAMYhxMwSiisH42OFgwfghMNVk9DRSBWRU5DRVUhm1ofA5JaHwqSDx8kakYfEQwyHxEMHh8NDB8DzjJSAA5SKAQKTAMfgzsfD30KR0FNRSAfxXgKGg4f0hMfA1UfKu8fBWk8HxEMH0sXHwZ9CB%2FC5hAfw9A9Tk9WTyAf4pEfZpfBrB%2FHbApKaKYAqQuipSB2oGwKAKkRoq2FmoabqYKiAIWchp2pEiAno6kjHwUNAKIgM40CogAzD0zXrGDmkKw0EhsEADOEkqAAbACgAAD%2FOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HjkK4awABRCt" target="_blank" rel="noopener noreferrer">
+					Versão 0.1</a></li>
+			</ul>
+		</div>
 
-<div>
-	<ul>
-	    <li><a href="https://8bitworkshop.com/v3.12.1/player.html?p=atari8-800&r=TFpHAAAgAAAADAamFo8OATdRX2saoR6hIqEroSihT6E%2FoUihRaE8oVuhc6FYoXChfqGdoZKh0KHkoQqiB6IjojSiqKKloqKit6L2ogijJ6Mao8KiyKI0o3Cjd6OAozujiaOXo6KjtqO0o8Oj6qNIpFqkZaS1pMSk3aQRpTylOaVOpX6lhKWQpZOlsKXMpdOlx6WFhYaGILWgqXCqqQydQgMgVuSKOOkQ0PGFoYWfhaCFACBDpbqGoqkohZBMhACZfwSKmacExpBgogCpIY3BpYaUhZWpIQqQAeiFloaXpZSFmBhlloWUqKWVhZlll4WVsDHM5QLt5gKwKaAAihhlmYWZmOiklvAJ0ALGmYiRmND7ytD2YJtyb3JyRSB5cm9tZU2boA25AaEg9aSIEPemoppg4AAQAyDco0yEAGuhGHmABEiKeagEqmhMggCkkIogq6CpAKpfVV8BAaIAXwKo0PaK0PNfy6ABsYWqiLGFpIXA%2FsjIhIWwIF%2FQogChheaF8BJfBqAAOKWFqnGFhYWKpoaQAuaGX4yqsYWolgBMd6GqX3uFpV88haSKkaRMY6GFmoabXw2k8AiFmYixpIWYYKWVkaSIpZSRpJiiAUzGoCCvobGakZio8AdrwojQ%2BVECbF8MmIWWGHGakAKp%2F5GYOOWW8OiopZYYZZiFmJDX5pmw0yC2pYWkhqWgALGkGGn%2FkaSwB8ixpF9BX3dAoqWappsknlEkBIJfSaaZJJ5w8V8EoADggJAFoIBfElEifYSepJC5gAS%2BqAQQBV8Lxp5RA6kQqQCFmaaX8B0GmiabKiaZqsWWpZnll5AIhZmK5Zaq5pqKiNDkYKaW8N9fmbAExZaQBOWW5pqI0O5gIKugUQKWloaXoAGxlqqIsZZRIx2RpMhRIgtRI0qIOJAYuaoEhZu5ggSFmlEEeAigAJADqf%2BqcZqRmkjIimvCqmikkMaQyCgwEhj5gASK%2BagEUBEwEVEiu4IA2VEFCe8w71Ejw1%2BK0PSKWagE0O7w219F1l%2BF0PDf5pDmkF8ZomCdSwMp8EkcnUoDSEipo0ipbaADnUQDaJ1Fa2FJa2FIA5hRRM6iAISgTIQAUzqbIJGjqQzQ6aSjjPsComDQ4KafqQBIoAfQz18Rhp9fHAprAapgpYUYaQJIpYZpXxVRRT%2BGhoWFXxhMGqFJAUqQ6aWFaQGQ7eaGsOm%2BgQSGmL6pBIaZvoAEhpa%2BqASoIOigTDajGEn%2FaQFIimuhAKpoYEi5gASFnLmoBIWduYFRIh%2BpBIWbaCAGpF9ihZ6KZZ6okALoyPA0hp7KGKWa5Z6Fmoplm4WbGKWcXwScimWdhZ3o6LGakZyI0PnmmvACxpvmnGuhnYjK0OlgqMjopRTFFPD8iND3ytD0TIQAUSKqogChUSKmKQOq8BOgA72tpC3mAhh9raTFlbAETA%2BhqI0AII0H1K0vAinjHbCkjS8CjB3QmA1vAinBjW8CvLKkjAEgoBGpAJkA0IgQ%2BkyEAPj8ABwMgECFVFEC4lW%2BqASGVkyCUQNioACxlvAMhZjIsZYg9aTEmND2XydfAmuhqL1KA4UqvUcDSL1GA0iYYKkghJmmn8mb0ASgAYShIOOkhKCkmcahEASpCYWhYKAAhpfIwBAqJpcQ%2BIWWrgrS5JatCtKFmOWXsPKKRphqiND6pphRAlRRZCpfAqAHUQKa0ogQ%2BmDggAiQUWIdhdSG1SCq2QbUKGbUIObYxvOgAMix8xD7KX%2BR85igAJHzpfOmUSIcSIpIa6GNAAGOAQEghFGCOWwAAYWYhplRRuoAsVFinkjIsZZlmapoUQRvUUP3sYXmhdAC5oaiUYP4YKkAqvAHIMagpZimmUhf95ilmYaZoAGRmIhokVECqQxeFgZEDEoMHsYCFsQeyAIWChoCYBwVSk9HTyBEQSBDQVZFUk5BIHYwLjKbYhYHGgNgHBpBdHVhbGl6YWRvIGVtIDE2LU91dC0yMDI2XxoCGgVgHAtPYmpldGl2b3M6X4sHYBwVLSBDb2xldGUgYXMgbW9lZGvBKl%2BVCGAcFi0gRGVzdHJ1YSBvIGluaW1pZ28gWF%2BWCWAcHy0gU29icmV2aXZhIGUgZmFjYSA1MDAwIHBvbnRvc1%2BfDGAcC0NfB3JvbGVRBW0OYBwOU2V0YXMgPSBtb3Zlcl%2BOD2AcD1NoaWZ0Xw5hdGlyYV%2FPEGAcClBfC3BhdXNlX4oSYBwTID5EZXNlbnZvbHZpZG8gcG9f5RNgHCIgRGFfDHNvbiBkZSBPbGl2ZWlyYSBMaW1hIChRIgMpXyINGhRgHBggLiBkUQUkZXFAZ21haWwuY29tX5gVYBwNXxhAX1kubXBiX40WYBwbXw1naXRodWJfYy9RBjhsaW1hm2J8AHwBFIQCXApUoacWWC4YwAMSVlEnuHwCfAMWA3oEfAVroQYWFHoHFiJ6CBYKeglfBApr4Qt8DA56DXwOag8cAT4ifBB8EQ56El%2BKfBNfzFEGTGoUEDQWFxA%2BVCeoDDIUYBwCI5tiFidRBgJAUhCoQmoUGgI0FhVfHEtRFBw0qEIwBjIHXwdAm2IwCDIJXwJYXwIKMgtfAiqbYgwgTRT8AlwaCjpSFqkW%2Fx78AhQC0mgMNAweCNIWAx4P0hQA0mgU3KxRCAkWBFpfjLRRDQxDpXByFg9RQgIIIFBBVVNFIJtiDlpRBlXIqFEEVV9yeFERRshRGUZrBJtiDnQBegEwARA6UjOpUQKeFLSGUQgtMAFRAl9MX9GgUQwRFDpSZV%2FRjFEMER46Un5f0XhRDBEoOlKXURMqMjpSsFETXDw6UslRE45GOlLiX9HcUQwRUDpS%2B1ETKlo4UgWqfAEwBnoVMAd6FjAGdA16FzAHdA56GBR4Alx6GTAZGgs6Uj2qMAYaAjhr4SgGDgRRRkw8Il8WBzpSXV9WJTZr4Q50BnoGUUlsXxgOOlJ7qjAHX3Z7qigHfA1fOF%2BWXl9WDTpSm19WFDZr4Q50B3pfWV%2FYdiIwFTIWYBwCIJtiMBcyGFEFAlFIW1EJpF%2BYMA0QOlLWqhwCPl8VDRAEOlLjXwU8XwUOXxHvXwR2X4RfEfxfBV6bYlFkUzarMAxrog56DDAGehAwB3oRMA16GjAOehtRQyhkUUooDFFEKA50E3oTFgR6HDADGmM4UkurFgNfhMc4UlerFgJfRBgrAThSY6sOXwQTMhw4UrmrfBNRZQ8gUYJUZgpUmKswBjIIOFKLqw50CHoIX0U2Uq%2BrKAhQr6swBzIJOFKlXxIJeglfRV%2BSCVFpUQwQOlKUrDAQMhFRJRMQdBp6EDARdBt6ETAQGiY4UuCrfAwwEBA2UulfQREaFThS81%2BCXwv8X0FRCzstX3syCF%2BKETIJa%2BIWGXQDegNRZJCMUQn%2BClFlkFERDHhRDQxRIiZRCZxRCPkDGiFmBnoIUaJ4a%2BFRCdF8DDAGMgo6UgCtMAcyC2viFgpRB39QUSqFUQVXX5EoURERUYV0UQhmClEFZgtRiI5RIm06Um9RAmQJa%2BIoBFEDRxRRCkceUQVHUUR0UUuIUaZzUUntUUL9FzAHehhRSaRf6FFCkQMyADhSe60wA3oAMAUaCip6HTAdGBAOKnoea%2BMsGjwqeh8wHRo8LHogDBJgHAZWaWRhczpiMARsYlGC51HjAV8HA18HCSBSZWNvcmRlXwgAbGIWm2QWGxBgMB4aCjZS3q0cATBiMB5fHwFfFx9fTPJfzB9RBQwgX0wGrl%2BMIGxiMAMYhxM4UpCuUa2PFgxRohQNVk9DRSBWRU5DRVUhm2JRIx1aUSodD1Ek%2BEZREQwyUREMHlENDFGjfjJaAA5aDnQFegUwBApUaqhRE4IKR0FNRSBPVkVSm2IWClHi9QhRDv9RBFpRSoJRBW48UREMUUuqUQaCCBoPYBwSNwYAN25vdm8gam9nb1GGLDCvUeeHClK8pwCp6qKlIH6gbAoAqYCir4WahpupgqIAhZyGnakSIAakqZJRBQ0AoiBfjQKiAF8PTEavYOaQrDQSNwQBw4SSoABsAKAAAP9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax9rH2sfax5rG1CvAAV%2Frw%3D%3D" target="_blank">
-			Versão 0.2 (Atual)</a></li>
-		<li><a href="https://8bitworkshop.com/v3.12.1/player.html?p=atari8-800&r=TFpHAAAgAAAACi4OFJd%2BARsfMzkSoRahGqEjoSChR6E3oUChPaE0oVOha6FQoWihdqGVoYqhqqGnocmhxqHDodihF6IpokiiO6LjoemhVaKRopiioaJcoqqiuKLDotei1aLkogujaaN7o4aj1qPlo%2F6jMqRdpFqkb6SfpKWksaS0pNGk7aT0pOikhYWGhiCtoKlwqqkMnUIDIFbkijjpENDxhaGFn4WghQAgZKS6hqKpKIWQTIQAmX8EipmnBMaQYKIAqSGN4qSGlIWVqRkKkAHohZaGl6WUhZgYZZaFlKillYWZZZeFlbAxzOUC7eYCsCmgAIoYZZmFmZjopJbwCdACxpmIkZjQ%2B8rQ9mCbcm9yckUgeXJvbWVNm6ANufmgIBakiBD3pqKaYOAAEAMg%2FaJMhAA5oRh5gARIinmoBKpoTIIApJCKIKOgqQCqM1UzAQGiADMCqND2itDzM8ugAbGFqoixhaSFwP7IyISFsCAz0KIAoYXmhfASMwagADilhapxhYWFiqaGkALmhjOMqrGFqJYATG%2BhqjN7haUzPIWkipGkTFuhINekhaSGpaAAsaQYaf%2BRpLAHyLGkM0EfBFMzV5aGlzMvlqqIsZYfA0aRpMgzdDOYiDiQGLmqBIWbuYIEhZq5gAS%2BqAQIoACQA6n%2FqnGakZpIyIo5wqpopJDGkMgoMBIY%2BYAEivmoBFARMBEfAuSCANkfBQnvMO8fA%2BwzitD0ilmoBNDu8NszRdYzhdDw3%2BaQ5pAzGaJgnUsDKfBJHJ1KA0hIqaJIqY6gA51EA2idRTlhSTlhSAOYHyT3ogCEoEyEAFM6myCyoqkM0Omko4z7AqJg0OCmn6kASKAH0M8zEYafMxwKOQGqYKWFGGkCSKWGaTMVHyVohoaFhTMYTBKhSQFKkOmlhWkBkO3mhrDpvoEEhpi%2BqQSGmb6ABIaWvqgEqCDgoExXohhJ%2F2kBSIo5oQCqaGBIuYAEhZy5qASFnbmBHyIfqQSFm2ggJ6MzYoWeimWeqJAC6MjwNIaeyhilmuWehZqKZZuFmxilnDMEnIplnYWd6OixmpGciND55prwAsab5pw5oZ2IytDpYKjI6KUUxRTw%2FIjQ98rQ9EyEAB8iqqIAoR8ipikDqvAToAO9zqMt5gIYfc6jxZWwBEwHoaiNACCNB9StLwIp4x3Ro40vAowd0JgNbwIpwY1vArzTo4wBIKARqQCZANCIEPpMhAD4%2FAAcDIBAhVQfAuJVvqgEhlZMgh8DYqAAsZbwDIWYyLGWIBakxJjQ9jMnMwI5oai9SgOFKr1HA0i9RgNImGCpIISZpp%2FJm9AEoAGEoSAEpISgpJnGoRAEqQmFoWCgAIaXyMAQKiaXEPiFlq4K0uSWrQrShZjll7DyikaYaojQ%2BqaYHwJUH0SrMwKgBx8CmtKIEPpg4IAIkB9iUoXUhtUgqtkG1Chm1CDm2MbzoADIsfMQ%2Byl%2FkfOYoACR86Xzph8iHEiKSDmhjQABjgEBIIQfYmJsAAGFmIaZH0bqALGWGGWYSMixlmWZqmgfBG8fQ%2FexheaF0ALmhqIhH4IhYKkAqvAHIL6gpZimmUgz95ilmYaZoAGRmIhokR8CqQxWFgY8DEIMHsYCFsQeyAIWChoCWBwQSk9HTyBEQSBDQVZFUk5Bm1oWAhoFWBwKT0JKRVRJVk86M4oHWBwTQ09MRVRFIEFTIE1PRUQ5wSozkwhYHBRERVNUUlVBIE8gSU5JTUlHTyBYM5QJWBwRU09CUkVWSVZBIEUgRkFDHwRaClgcDDUwMDAgUE9OVE9TM4wNWBwKQzMHUk9MRTPKD1gcDlNFVEFTID0gTU9WRVIzjhBYHA9TSElGVDMOQVRJUkEzzxNYHBFERVNFTlZPTFZJRE8gUE8z0RRYHBVEQTMLU09OIERFIE9MSVZFMy8zlRVYHAxMSU1BICgyMDI2KZtadAB0ARYWGhdYHAhSRUNPUkRFOlooAWRaFptcFIQCVApMTaYWWCYYwAMSTh8nQ3QCdAMWA3IEFgJyBRYUcgYWI3IHFgpyCDMECRYFcgp0C3QMdA0Ocg4Ocg90EHQRHwY5YhIQLBYXEDZMwKYMKhJYHAIjm1oWJx8GAjhKqaY6YhIaAiwWFTMc5B8UHM2mOigFKgYzB0CbWigHKggzAlgzAgkqCjMCKptaDCBNFPwCVBoKMkqvpxb%2FHvwCFALSYAwsDB4I0hYDHg%2FSFADSYBTcrB8ICRYEUjOMtB8NDGSkaGoWDxoMWBwIIFBBVVNFIJtaDlIfBlVhHwVVM3J4HxFGyB8ZRjkEm1oObAByACgAEDJKzKcfAp4UtIYfCC0oAB8CX%2BUz0aAfDBEUMkr%2BM9GMHwwRHjJKF6gzkXgfDBEoMkowM9EfDSoyMkpJM9EfDVw8MkpiM9EfDY5GMkp7M9HcHwwRUDJKlB8TKlowSp6odAAoBXITKAZyFBR4AlRyFSgVGgsySsOoKAUQMDnBJAUOBB9CJzMPBzJK3TMPGiYuOeEObAVyBR9DQTMSDjJK9KgoBjMp9KgkBnQPMyszTw0ySg6pKAYaFS454Q5sBnIzUzMSEyoUWBwCIJtaH0grH0TNXKkoCzmiDnILKAVyDCgGcg0oD3IWKBByFx8jtWQfKrUMHyS1DmwRchEWBHIYKAMaYzBKcakWAzOExzBKfakWAjNEGCsBMEqJqQ4zBBEqGDBK36l0ER9FnCAfYndeCky%2BqSgFKgcwSrGpDmwHcgczRS5K1akkB0jVqSgGKggwSsszEghyCDNFM5IIH0neCxAySrmqKAwqDR8F0AxsFnIMKA1sF3INKAwaJjBKBqp0CygMEC5KDzNBDRoVMEoZM4IzCyIzQR8LOy0zeyoHM4oNKgg54hYZbANyAx9kHYwfCf4KH2UdHxEMeB8NDB8iJh8JnB8J%2BRojXgZyBw4aFTnBHwnQdAsoBSoJMkojqygGKgo54hYKHwd%2BUB8qhB8FVjORKB8RER%2BFAB9iVBolXgZyCR8EZAofiBgfImoySmAfAmIIOeIkBB8DRRQfCkUeH2WnH4XYH4lpAyoBMEpsqygDcgEMElgcBlZJREFTOlooBGRaH4IeH6PWMwcDMwcJIB%2BrSRwEH2PrKAMYhxMwSiisH42OFgwfghMNVk9DRSBWRU5DRVUhm1ofA5JaHwqSDx8kakYfEQwyHxEMHh8NDB8DzjJSAA5SKAQKTAMfgzsfD30KR0FNRSAfxXgKGg4f0hMfA1UfKu8fBWk8HxEMH0sXHwZ9CB%2FC5hAfw9A9Tk9WTyAf4pEfZpfBrB%2FHbApKaKYAqQuipSB2oGwKAKkRoq2FmoabqYKiAIWchp2pEiAno6kjHwUNAKIgM40CogAzD0zXrGDmkKw0EhsEADOEkqAAbACgAAD%2FOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HzkfOR85HjkK4awABRCt" target="_blank">
-			Versão 0.1</a></li>
-	</ul>
-</div>
+		<br>
 
-<br>
+		<h2>Screenshots:</h2>
 
-<h2>Screenshots:</h2>
+		<div class="gallery">
 
-<div class="gallery">
+			<a href="https://davidsonlima.github.io/jogodacaverna/screenshots/home.png"
+			   target="_blank" rel="noopener noreferrer">
+				<img src="https://davidsonlima.github.io/jogodacaverna/screenshots/home.png"
+					 alt="Tela Inicial">
+			</a>
 
-<a href="https://davidsonlima.github.io/jogodacaverna/screenshots/home.png"
-   target="_blank">
-    <img src="https://davidsonlima.github.io/jogodacaverna/screenshots/home.png"
-         alt="Tela Inicial">
-</a>
+			<a href="https://davidsonlima.github.io/jogodacaverna/screenshots/gameplay.png"
+			   target="_blank" rel="noopener noreferrer">
+				<img src="https://davidsonlima.github.io/jogodacaverna/screenshots/gameplay.png"
+					 alt="Gameplay">
+			</a>
 
-<a href="https://davidsonlima.github.io/jogodacaverna/screenshots/gameplay.png"
-   target="_blank">
-    <img src="https://davidsonlima.github.io/jogodacaverna/screenshots/gameplay.png"
-         alt="Gameplay">
-</a>
+			<a href="https://davidsonlima.github.io/jogodacaverna/screenshots/gameover.png"
+			   target="_blank" rel="noopener noreferrer">
+				<img src="https://davidsonlima.github.io/jogodacaverna/screenshots/gameover.png"
+					 alt="Game Over">
+			</a>
 
-<a href="https://davidsonlima.github.io/jogodacaverna/screenshots/gameover.png"
-   target="_blank">
-    <img src="https://davidsonlima.github.io/jogodacaverna/screenshots/gameover.png"
-         alt="Game Over">
-</a>
+		</div>
 
-</div>
+		<br>
 
-<br>
+		<h2>Para Desenvolvedores:</h2>
 
-<h2>Para Desenvolvedores:</h2>
+		<div>
 
-<div>
+			<a class="button" href="jogodacaverna.rom">
+				Baixar ROM Atari
+			</a>
 
-<a class="button" href="jogodacaverna.rom">
-Baixar ROM Atari
-</a>
+			<a class="button"
+			   href="https://github.com/davidsonlima/jogodacaverna"
+			   target="_blank" rel="noopener noreferrer">
+				Código Fonte
+			</a>
 
-<a class="button"
-href="https://github.com/davidsonlima/jogodacaverna">
-Código Fonte
-</a>
+		</div>
 
-</div>
+		<br>
 
-<br>
+		<h2>Contato:</h2>
 
-<h2>Contato:</h2>
+		<a class="button"
+		   href="mailto:davidsoneq@gmail.com">
+			E-mail
+		</a>
 
-<a class="button"
-   href="mailto:davidsoneq@gmail.com"> E-mail
-</a>
+		<a class="button"
+		   href="https://www.instagram.com/davi.mpb"
+		   target="_blank" rel="noopener noreferrer">
+			Instagram
+		</a>
 
-<a class="button"
-   href="https://www.instagram.com/davi.mpb"
-   target="_blank"> Instagram
-</a>
+		<a class="button"
+		   href="https://github.com/davidsonlima"
+		   target="_blank" rel="noopener noreferrer">
+			GitHub
+		</a>
 
-<a class="button"
-   href="https://github.com/davidsonlima"
-   target="_blank"> GitHub
-</a>
+		<footer>
 
-<footer>
+			<p>
+				Jogo da Caverna © 2026
+				<br>
+				Davidson de Oliveira Lima
+			</p>
 
-    <p>
-        Jogo da Caverna © 2026
-        <br>
-        Davidson de Oliveira Lima
-    </p>
+			<p>
+				<a href="https://visitorbadge.io/status?path=https%3A%2F%2Fdavidsonlima.github.io%2Fjogodacaverna%2F"
+				   target="_blank" rel="noopener noreferrer">
 
-    <p>
-        <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fdavidsonlima.github.io%2Fjogodacaverna%2F"
-           target="_blank">
+					<img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fdavidsonlima.github.io%2Fjogodacaverna%2F&amp;label=Visitantes&amp;labelColor=%2300aa00&amp;countColor=%23d9e3f0"
+						 alt="Contador de visitantes">
 
-            <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fdavidsonlima.github.io%2Fjogodacaverna%2F&label=Visitantes&labelColor=%2300aa00&countColor=%23d9e3f0"
-                 alt="Contador de visitantes">
+				</a>
+			</p>
 
-        </a>
-    </p>
+		</footer>
 
-</footer>
+		<script src="jquery/jquery.min.js"></script>
 
-<script>
+		<script src="tss/js/tss/PsgDeviceChannel.js"></script>
+		<script src="tss/js/tss/MasterChannel.js"></script>
+		<script src="tss/js/tss/AudioLooper.js"></script>
+		<script src="tss/js/Log.js"></script>
+		<script src="lib/liblzg.js"></script>
 
-function toggleGame(){
+		<script src="gen/embedui.js" type="module"></script>
 
-    document
-        .getElementById("gameWrapper")
-        .classList
-        .toggle("fullscreen");
+		<script>
 
-}
+		/* ===== Áudio ===== */
 
-function copiarPix() {
+		let audioUnlocked = false;
 
-    const pix =
-"00020126360014br.gov.bcb.pix0114+55219769108465204000053039865802BR5925DAVIDSON DE OLIVEIRA LIMA6009Sao Paulo62290525REC6AD19780E5C58419447557630495A3";
+		function unlockAudio(){
 
-    navigator.clipboard.writeText(pix);
+			if(audioUnlocked)
+				return;
 
-    alert("Código PIX copiado!");
-}
+			try{
+				if(window.platform){
+					platform.resume();
+					audioUnlocked = true;
+				}
+			}catch(e){
+				console.log(e);
+			}
+		}
 
-</script>
+		/* Tenta liberar o áudio a cada toque/clique até o emulador estar pronto */
+		window.addEventListener("pointerdown", unlockAudio);
 
-</body>
+
+		/* ===== Teclado virtual (controles de toque) ===== */
+
+		let heldKey = null;
+
+		function getCanvas(){
+			return document.querySelector("#emuscreen canvas")
+				|| document.querySelector("canvas");
+		}
+
+		function fireKey(type, k){
+
+			const c = getCanvas();
+
+			if(!c)
+				return;
+
+			c.dispatchEvent(
+				new KeyboardEvent(type,{
+					key:k.key,
+					code:k.code,
+					keyCode:k.keyCode,
+					which:k.keyCode,
+					bubbles:true
+				})
+			);
+		}
+
+		/* Toque único (tiro / pause) */
+		function send(key,code,keyCode){
+
+			unlockAudio();
+
+			const k = {key,code,keyCode};
+
+			fireKey("keydown",k);
+
+			setTimeout(()=>fireKey("keyup",k),60);
+		}
+
+		/* Segurar (setas): keydown ao pressionar, keyup ao soltar */
+		function hold(key,code,keyCode){
+
+			unlockAudio();
+
+			releaseKey();
+
+			heldKey = {key,code,keyCode};
+
+			fireKey("keydown",heldKey);
+		}
+
+		function releaseKey(){
+
+			if(!heldKey)
+				return;
+
+			fireKey("keyup",heldKey);
+
+			heldKey = null;
+		}
+
+
+		/* ===== Palco do emulador: prende o canvas na moldura ===== */
+
+		const CANVAS_STYLE =
+			"position:absolute !important;top:0 !important;left:0 !important;" +
+			"right:auto !important;bottom:auto !important;" +
+			"width:100% !important;height:100% !important;" +
+			"max-width:none !important;max-height:none !important;" +
+			"margin:0 !important;padding:0 !important;border:0 !important;" +
+			"display:block !important;float:none !important;transform:none !important;" +
+			"box-sizing:border-box;";
+
+		let canvasStyleNormalized = null;
+		let watchedCanvas = null;
+
+		function fitCanvas(){
+
+			const stage  = document.getElementById("emulator");
+			const holder = document.getElementById("emuscreen");
+			const c      = document.querySelector("canvas");
+
+			if(!stage || !holder || !c)
+				return;
+
+			/* garante que o canvas está dentro da moldura */
+			if(c.parentElement !== holder)
+				holder.appendChild(c);
+
+			/* proporção real do vídeo do emulador */
+			const w = c.width  || 336;
+			const h = c.height || 240;
+
+			stage.style.setProperty("--ratio", w + "/" + h);
+			stage.style.setProperty("--ratio-num", (w / h).toFixed(4));
+
+			/* reaplica o estilo caso o emulador altere o atributo style */
+			if(canvasStyleNormalized === null || c.style.cssText !== canvasStyleNormalized){
+				c.style.cssText = CANVAS_STYLE;
+				canvasStyleNormalized = c.style.cssText;
+			}
+
+			/* observa mudanças de tamanho/estilo do canvas */
+			if(watchedCanvas !== c){
+				watchedCanvas = c;
+				new MutationObserver(fitCanvas).observe(c, {
+					attributes:true,
+					attributeFilter:["width","height","style"]
+				});
+			}
+		}
+
+		/* o canvas é criado pelo emulador depois do carregamento */
+		new MutationObserver(fitCanvas).observe(document.documentElement, {
+			childList:true,
+			subtree:true
+		});
+
+		window.addEventListener("load", fitCanvas);
+		window.addEventListener("resize", fitCanvas);
+		fitCanvas();
+
+
+		/* ===== Tela cheia ===== */
+
+		function toggleGame(){
+
+			document
+				.getElementById("gameWrapper")
+				.classList
+				.toggle("fullscreen");
+		}
+
+		/* ESC sai do modo tela cheia */
+		document.addEventListener("keydown", function(e){
+
+			if(e.key === "Escape")
+				document
+					.getElementById("gameWrapper")
+					.classList
+					.remove("fullscreen");
+		});
+
+
+		/* ===== PIX ===== */
+
+		function copiarPix(){
+
+			const pix =
+		"00020126360014br.gov.bcb.pix0114+55219769108465204000053039865802BR5925DAVIDSON DE OLIVEIRA LIMA6009Sao Paulo62290525REC6AD19780E5C58419447557630495A3";
+
+			if(navigator.clipboard && navigator.clipboard.writeText){
+
+				navigator.clipboard.writeText(pix)
+					.then(()=>alert("Código PIX copiado!"))
+					.catch(()=>prompt("Copie o código PIX:", pix));
+
+			}else{
+
+				prompt("Copie o código PIX:", pix);
+			}
+		}
+
+		</script>
+
+	</body>
 
 </html>
