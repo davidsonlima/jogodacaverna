@@ -46,11 +46,15 @@
 			}
 
 			#gameWrapper.fullscreen{
+
 				position:fixed;
+
 				top:0;
 				left:0;
+
 				width:100vw;
 				height:100vh;
+
 				max-width:none;
 				margin:0;
 
@@ -60,8 +64,13 @@
 
 				display:flex;
 				flex-direction:column;
-				justify-content:center;
+
+				justify-content:flex-start;
 				align-items:center;
+
+				padding-top:20px;
+
+				box-sizing:border-box;
 			}
 
 			#gameWrapper.fullscreen .button{
@@ -182,18 +191,20 @@
 
 			/* Tela cheia: a moldura cresce até caber na janela, mantendo a proporção */
 			#gameWrapper.fullscreen #emulator{
-				width:min(96vw, calc((100vh - 160px) * var(--ratio-num)));
+
+				margin-top:15px;
+
+				width:min(
+					96vw,
+					calc((100vh - 380px) * var(--ratio-num))
+				);
 			}
 
 			/* ===== Controles de toque ===== */
 
 			#touch{
-
-				position:fixed;
-
-				left:0;
-				right:0;
-				bottom:10px;
+			
+				display:none;
 
 				max-width:640px;
 				margin:auto;
@@ -324,7 +335,32 @@
 				}
 
 				#gameWrapper.fullscreen #emulator{
-					width:min(96vw, calc((100vh - 360px) * var(--ratio-num)));
+					width:min(
+						96vw,
+						calc((100vh - 280px) * var(--ratio-num))
+					);
+				}
+				
+				#gameWrapper.fullscreen #touch{
+
+					display:flex;
+
+					position:fixed;
+
+					left:0;
+					right:0;
+					bottom:20px;
+
+					max-width:800px;
+
+					margin:auto;
+
+					padding:0 20px;
+
+					justify-content:space-between;
+					align-items:flex-end;
+
+					z-index:999999;
 				}
 			}
 
@@ -836,6 +872,46 @@
 				prompt("Copie o código PIX:", pix);
 			}
 		}
+		
+		function toggleGame(){
+
+			const wrapper =
+				document.getElementById("gameWrapper");
+
+			wrapper.classList.toggle("fullscreen");
+
+			const btn =
+				document.querySelector(
+					'button[onclick="toggleGame()"]'
+				);
+
+			if(wrapper.classList.contains("fullscreen")){
+
+				btn.textContent =
+					"Sair do Modo Tela Cheia";
+
+			}else{
+
+				btn.textContent =
+					"Modo Tela Cheia";
+			}
+		}
+		
+		document.addEventListener("keydown", function(e){
+
+			if(e.key === "Escape"){
+
+				document
+					.getElementById("gameWrapper")
+					.classList
+					.remove("fullscreen");
+
+				document.querySelector(
+					'button[onclick="toggleGame()"]'
+				).textContent =
+					"Modo Tela Cheia";
+			}
+		});
 		
 		window.addEventListener("load", () => {
 			document.body.style.backgroundColor = "#000";
