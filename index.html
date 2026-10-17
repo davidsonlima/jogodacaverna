@@ -52,8 +52,8 @@
 				top:0;
 				left:0;
 
-				width:100vw;
-				height:100vh;
+				width:100dvw;
+				height:100dvh;
 
 				max-width:none;
 				margin:0;
@@ -398,45 +398,49 @@
 			
 			@media (orientation: landscape){
 
+				#gameWrapper.fullscreen{
+
+					padding-top:5px;
+					padding-bottom:0;
+				}
+
+				#gameWrapper.fullscreen .button{
+
+					margin-bottom:5px;
+				}
+
+				#gameWrapper.fullscreen #emulator{
+
+					width:min(
+						92vw,
+						calc((100vh - 110px) * var(--ratio-num))
+					);
+
+					margin-top:0;
+				}
+
 				#gameWrapper.fullscreen #touch{
 
 					position:fixed;
 
-					left:25px;
-					right:25px;
+					left:10px;
+					right:10px;
 
-					bottom:35px; /* antes estava muito baixo */
+					bottom:5px;
 
 					display:flex;
+
 					justify-content:space-between;
 					align-items:flex-end;
 				}
 
 				#dpad{
-					transform:scale(0.85);
-					transform-origin:left bottom;
+					transform:scale(.95);
 				}
 
 				.action{
-					transform:scale(0.85);
-					transform-origin:right bottom;
-
+					transform:scale(.95);
 					margin-bottom:0;
-				}
-
-				.gamebtn{
-					width:60px;
-					height:60px;
-				}
-
-				.fire{
-					width:80px;
-					height:80px;
-				}
-
-				.pause{
-					width:52px;
-					height:52px;
 				}
 			}
 
