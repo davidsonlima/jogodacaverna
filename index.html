@@ -68,7 +68,8 @@
 				justify-content:flex-start;
 				align-items:center;
 
-				padding-top:20px;
+				padding-top:10px;
+				padding-bottom:170px;
 
 				box-sizing:border-box;
 			}
@@ -211,7 +212,6 @@
 
 				padding:0 20px;
 
-				display:flex;
 				justify-content:space-between;
 				align-items:flex-end;
 
@@ -347,15 +347,10 @@
 
 					position:fixed;
 
-					left:0;
-					right:0;
-					bottom:20px;
+					left:20px;
+					right:20px;
 
-					max-width:800px;
-
-					margin:auto;
-
-					padding:0 20px;
+					bottom:15px;
 
 					justify-content:space-between;
 					align-items:flex-end;
@@ -398,6 +393,50 @@
 				.fire{
 					width:90px;
 					height:90px;
+				}
+			}
+			
+			@media (orientation: landscape){
+
+				#gameWrapper.fullscreen #touch{
+
+					position:fixed;
+
+					left:25px;
+					right:25px;
+
+					bottom:35px; /* antes estava muito baixo */
+
+					display:flex;
+					justify-content:space-between;
+					align-items:flex-end;
+				}
+
+				#dpad{
+					transform:scale(0.85);
+					transform-origin:left bottom;
+				}
+
+				.action{
+					transform:scale(0.85);
+					transform-origin:right bottom;
+
+					margin-bottom:0;
+				}
+
+				.gamebtn{
+					width:60px;
+					height:60px;
+				}
+
+				.fire{
+					width:80px;
+					height:80px;
+				}
+
+				.pause{
+					width:52px;
+					height:52px;
 				}
 			}
 
