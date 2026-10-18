@@ -470,6 +470,14 @@
 					margin-bottom:54px;
 					margin-right: -10px;
 				}
+
+				#gameWrapper.fullscreen #musicBtn{
+					position:fixed;
+					top:5px;
+					right:10px;
+					left:auto !important;
+					z-index:1000000;
+				}
 			}
 
 		</style>
@@ -561,6 +569,13 @@
 
 				<button type="button" class="button" onclick="toggleGame()">
 					Modo Tela Cheia / Modo Celular
+				</button>
+				<button
+					type="button"
+					id="musicBtn"
+					class="button"
+					onclick="toggleMusic()">
+					🔇 Música OFF
 				</button>
 
 			</p>
@@ -1003,11 +1018,41 @@
 			music.volume = 0.2;
 
 			music.play()
-				.then(() => musicStarted = true)
+				.then(() => {
+
+					musicStarted = true;
+
+					document.getElementById("musicBtn")
+						.textContent = "🔊 Música ON";
+
+				})
 				.catch(() => {});
 		}
 
-		window.addEventListener("pointerdown", startMusic);
+		function toggleMusic(){
+
+			const music =
+				document.getElementById("bgmusic");
+
+			const btn =
+				document.getElementById("musicBtn");
+
+			if(music.paused){
+
+				music.play();
+
+				btn.textContent =
+					"🔊 Música ON";
+
+			}else{
+
+				music.pause();
+
+				btn.textContent =
+					"🔇 Música OFF";
+
+			}
+		}
 
 		</script>
 
