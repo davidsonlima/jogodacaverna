@@ -204,16 +204,17 @@
 			/* ===== Controles de toque ===== */
 
 			#touch{
+
+				max-width:none;
 			
 				display:none;
 
-				max-width:640px;
 				margin:auto;
 
 				padding:0 20px;
 
 				justify-content:space-between;
-				align-items:flex-end;
+				align-items:center;
 
 				z-index:999999;
 			}
@@ -272,7 +273,7 @@
 
 			.action{
 				display:flex;
-				align-items:flex-end;
+				align-items:center;
 				gap:12px;
 
 				margin-bottom:25px;
@@ -309,7 +310,7 @@
 
 			.pause{
 			
-				margin-bottom:12px;
+				margin-bottom:0;
 
 				width:60px;
 				height:60px;
@@ -343,11 +344,13 @@
 				
 				#gameWrapper.fullscreen #touch{
 
+					max-width:none;
+
 					display:flex;
 
 					position:fixed;
 
-					left:20px;
+					left:-16px;
 					right:20px;
 
 					bottom:15px;
@@ -423,7 +426,9 @@
 
 					position:fixed;
 
-					left:10px;
+					max-width:none;
+
+					left:-22px;
 					right:10px;
 
 					bottom:5px;
@@ -440,7 +445,7 @@
 
 				.action{
 					transform:scale(.95);
-					margin-bottom:0;
+					margin-bottom:54px;
 				}
 			}
 
