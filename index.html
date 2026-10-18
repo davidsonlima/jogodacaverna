@@ -990,7 +990,28 @@
 			document.body.style.backgroundColor = "#000";
 		});
 
+		let musicStarted = false;
+
+		function startMusic(){
+
+			if(musicStarted)
+				return;
+
+			const music =
+				document.getElementById("bgmusic");
+
+			music.volume = 0.2;
+
+			music.play()
+				.then(() => musicStarted = true)
+				.catch(() => {});
+		}
+
+		window.addEventListener("pointerdown", startMusic);
+
 		</script>
+
+	<audio id="bgmusic" src="music/musica8bit.m4a" loop preload="auto" type="audio"></audio>
 
 	</body>
 
