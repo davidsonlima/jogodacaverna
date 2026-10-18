@@ -75,7 +75,16 @@
 			}
 
 			#gameWrapper.fullscreen .button{
-				margin-bottom:20px;
+
+				position:fixed;
+
+				top:5px;
+
+				left:5px;
+
+				margin:0;
+
+				z-index:1000000;
 			}
 
 			.gallery{
@@ -221,11 +230,9 @@
 
 			#dpad{
 				display:grid;
-
-				grid-template-columns:70px 70px 70px;
-				grid-template-rows:70px 70px 70px;
-
-				gap:2px;
+				grid-template-columns:60px 60px 60px;
+				grid-template-rows:60px 60px 60px;
+				gap:0;
 			}
 
 			.gamebtn{
@@ -277,6 +284,7 @@
 				gap:12px;
 
 				margin-bottom:25px;
+			    margin-left: 10px;
 			}
 
 			.fire{
@@ -409,7 +417,15 @@
 
 				#gameWrapper.fullscreen .button{
 
-					margin-bottom:5px;
+					position:fixed;
+
+					top:5px;
+
+					left:5px;
+
+					margin:0;
+
+					z-index:1000000;
 				}
 
 				#gameWrapper.fullscreen #emulator{
@@ -440,7 +456,7 @@
 				}
 
 				#dpad{
-					transform:scale(.95);
+					transform:scale(.80);
 				}
 
 				.action{
@@ -938,7 +954,7 @@
 			if(wrapper.classList.contains("fullscreen")){
 
 				btn.textContent =
-					"Sair do Modo Tela Cheia / Modo Celular";
+					"Voltar";
 
 			}else{
 
