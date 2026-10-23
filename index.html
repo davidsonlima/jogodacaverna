@@ -7,7 +7,12 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<meta name="googlebot" content="noindex">
+		<meta name="description" content="Jogo da Caverna: jogo retrô para Atari 8-bit, jogável no navegador e no celular.">
+
+		<meta property="og:title" content="Jogo da Caverna">
+		<meta property="og:description" content="Jogo retrô para Atari 8-bit. Jogue grátis no navegador!">
+		<meta property="og:image" content="https://davidsonlima.github.io/jogodacaverna/screenshots/gameplay.png">
+		<meta property="og:url" content="https://davidsonlima.github.io/jogodacaverna/">
 
 		<title>Jogo da Caverna</title>
 
@@ -605,7 +610,7 @@
 		<ul>
 			<li>Setas = Movimento</li>
 			<li>Shift = Atira</li>
-			<li>Espaço = Bomba</li>
+			<li>Espaço = Bomba (apenas versão 0.4)</li>
 			<li>P = Pause</li>
 		</ul>
 
@@ -708,6 +713,7 @@
 					</button>
 
 					<button type="button" class="gamebtn fire secondary"
+						id="btnSecundario"
 						onclick="send(' ','Space',32)">
 					</button>
 
@@ -849,6 +855,10 @@
 
 		if(versao.selectedIndex < 0)
 			versao.selectedIndex = 0;
+
+		/* Botão secundário (bomba): só aparece na versão 0.4 */
+		document.getElementById("btnSecundario").style.display =
+			(versao.value === "jogodacavernav0.4.rom") ? "" : "none";
 
 		/* ===== Áudio ===== */
 
