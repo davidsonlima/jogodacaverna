@@ -9,7 +9,7 @@
 
 		<meta name="googlebot" content="noindex">
 
-		<title>Jogo da Caverna v1.0</title>
+		<title>Jogo da Caverna</title>
 
 		<style media="screen">
 
@@ -98,6 +98,11 @@
 				z-index:1000000;
 			}
 
+			/* Tela cheia: esconde a combobox de versão */
+			#gameWrapper.fullscreen #versaoBox{
+				display:none;
+			}
+
 			.gallery{
 				display:flex;
 				justify-content:center;
@@ -125,11 +130,11 @@
 			.button{
 				display:inline-block;
 				padding:15px 25px;
-				background:#00aa00;
-				color:white;
+				background:#111;
+				color:#00ff00;
 				text-decoration:none;
 				font-weight:bold;
-				border:none;
+				border:2px solid #00ff00;
 				border-radius:8px;
 				margin:10px;
 				font-family:inherit;
@@ -138,7 +143,16 @@
 			}
 
 			.button:hover{
-				background:#00dd00;
+				background:#003300;
+			}
+
+			#versao{
+				background:#111;
+				color:#00ff00;
+				border:2px solid #00ff00;
+				font-family:inherit;
+				font-size:16px;
+				padding:6px;
 			}
 
 			a{
@@ -226,7 +240,7 @@
 			#touch{
 
 				max-width:none;
-			
+
 				display:none;
 
 				margin:auto;
@@ -237,6 +251,15 @@
 				align-items:center;
 
 				z-index:999999;
+			}
+
+			/* Impede seleção de texto, menu de toque longo e o destaque azul nos controles */
+			#touch,
+			#touch *{
+				-webkit-user-select:none;
+				user-select:none;
+				-webkit-touch-callout:none;
+				-webkit-tap-highlight-color:transparent;
 			}
 
 			#dpad{
@@ -299,7 +322,7 @@
 			}
 
 			.fire{
-			
+
 				margin-bottom:0;
 
 				width:90px;
@@ -328,7 +351,7 @@
 			}
 
 			.pause{
-			
+
 				margin-bottom:0;
 
 				width:60px;
@@ -360,7 +383,7 @@
 						calc((100vh - 280px) * var(--ratio-num))
 					);
 				}
-				
+
 				#gameWrapper.fullscreen #touch{
 
 					max-width:none;
@@ -417,7 +440,7 @@
 					height:90px;
 				}
 			}
-			
+
 			@media (orientation: landscape){
 
 				#gameWrapper.fullscreen{
@@ -580,6 +603,20 @@
 
 			</p>
 
+			<p id="versaoBox" style="text-align:center">
+
+				<label for="versao">Versão:</label>
+
+				<select id="versao"
+					autocomplete="off"
+					onchange="location.href='?p=atari8-800&url=' + this.value">
+					<option value="jogodacavernav1.0.rom">1.0</option>
+					<option value="jogodacavernav0.2.rom">0.2</option>
+					<option value="jogodacavernav0.1.rom">0.1</option>
+				</select>
+
+			</p>
+
 			<div id="emulator">
 
 				<!-- emulator video -->
@@ -592,7 +629,7 @@
 
 			</div><!-- fecha #emulator -->
 
-			<div id="touch">
+			<div id="touch" oncontextmenu="return false">
 
 				<div id="dpad">
 
@@ -702,13 +739,13 @@
 		<div>
 
 			<a class="button" href="jogodacavernav1.0.rom">
-				Baixar ROM Atari
+				Baixar ROM Atari (v1.0)
 			</a>
 
 			<a class="button"
 			   href="https://github.com/davidsonlima/jogodacaverna"
 			   target="_blank" rel="noopener noreferrer">
-				Código Fonte
+				Código-Fonte
 			</a>
 
 		</div>
@@ -765,7 +802,7 @@
 		<script src="gen/embedui.js" type="module"></script>
 
 		<script>
-		
+
 		const params = new URLSearchParams(location.search);
 
 		if(!params.has("url")){
@@ -774,6 +811,14 @@
 				"?p=atari8-800&url=jogodacavernav1.0.rom";
 
 		}
+
+		/* Mostra na combobox a versão carregada (padrão: primeira opção) */
+		const versao = document.getElementById("versao");
+
+		versao.value = params.get("url");
+
+		if(versao.selectedIndex < 0)
+			versao.selectedIndex = 0;
 
 		/* ===== Áudio ===== */
 
@@ -862,16 +907,6 @@
 
 		/* ===== Palco do emulador: prende o canvas na moldura ===== */
 
-		/*const CANVAS_STYLE =
-			"position:absolute !important;top:0 !important;left:0 !important;" +
-			"right:auto !important;bottom:auto !important;" +
-			"width:100% !important;height:100% !important;" +
-			"max-width:none !important;max-height:none !important;" +
-			"margin:0 !important;padding:0 !important;border:0 !important;" +
-			"display:block !important;float:none !important;transform:none !important;" +
-			"box-sizing:border-box;"; */
-
-		let canvasStyleNormalized = null;
 		let watchedCanvas = null;
 
 		function fitCanvas(){
@@ -893,12 +928,6 @@
 
 			stage.style.setProperty("--ratio", w + "/" + h);
 			stage.style.setProperty("--ratio-num", (w / h).toFixed(4));
-
-			/* reaplica o estilo caso o emulador altere o atributo style */
-			/*if(canvasStyleNormalized === null || c.style.cssText !== canvasStyleNormalized){
-				 c.style.cssText = CANVAS_STYLE; 
-				canvasStyleNormalized = c.style.cssText;
-			}*/
 
 			/* observa mudanças de tamanho/estilo do canvas */
 			if(watchedCanvas !== c){
@@ -925,44 +954,6 @@
 
 		function toggleGame(){
 
-			document
-				.getElementById("gameWrapper")
-				.classList
-				.toggle("fullscreen");
-		}
-
-		/* ESC sai do modo tela cheia */
-		document.addEventListener("keydown", function(e){
-
-			if(e.key === "Escape")
-				document
-					.getElementById("gameWrapper")
-					.classList
-					.remove("fullscreen");
-		});
-
-
-		/* ===== PIX ===== */
-
-		function copiarPix(){
-
-			const pix =
-		"00020126360014br.gov.bcb.pix0114+55219769108465204000053039865802BR5925DAVIDSON DE OLIVEIRA LIMA6009Sao Paulo62290525REC6AD19780E5C58419447557630495A3";
-
-			if(navigator.clipboard && navigator.clipboard.writeText){
-
-				navigator.clipboard.writeText(pix)
-					.then(()=>alert("Código PIX copiado!"))
-					.catch(()=>prompt("Copie o código PIX:", pix));
-
-			}else{
-
-				prompt("Copie o código PIX:", pix);
-			}
-		}
-		
-		function toggleGame(){
-
 			const wrapper =
 				document.getElementById("gameWrapper");
 
@@ -984,7 +975,8 @@
 					"Modo Tela Cheia / Modo Celular";
 			}
 		}
-		
+
+		/* ESC sai do modo tela cheia */
 		document.addEventListener("keydown", function(e){
 
 			if(e.key === "Escape"){
@@ -1000,10 +992,33 @@
 					"Modo Tela Cheia / Modo Celular";
 			}
 		});
-		
+
+
+		/* ===== PIX ===== */
+
+		function copiarPix(){
+
+			const pix =
+		"00020126360014br.gov.bcb.pix0114+55219769108465204000053039865802BR5925DAVIDSON DE OLIVEIRA LIMA6009Sao Paulo62290525REC6AD19780E5C58419447557630495A3";
+
+			if(navigator.clipboard && navigator.clipboard.writeText){
+
+				navigator.clipboard.writeText(pix)
+					.then(()=>alert("Código PIX copiado!"))
+					.catch(()=>prompt("Copie o código PIX:", pix));
+
+			}else{
+
+				prompt("Copie o código PIX:", pix);
+			}
+		}
+
 		window.addEventListener("load", () => {
 			document.body.style.backgroundColor = "#000";
 		});
+
+
+		/* ===== Música ===== */
 
 		let musicStarted = false;
 
