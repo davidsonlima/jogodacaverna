@@ -39,6 +39,31 @@
 				color:#00ffff;
 			}
 
+			/* Rolagem suave ao clicar em "Ir para o jogo" */
+			html{
+				scroll-behavior:smooth;
+			}
+
+			/* Título clicável (volta para a página inicial) */
+			h1 a,
+			h1 a:link,
+			h1 a:visited,
+			h1 a:hover,
+			h1 a:active,
+			h1 a:focus{
+				color:inherit;
+				text-decoration:none;
+			}
+
+			.ir-jogo{
+				text-align:center;
+				margin-top:-10px;
+			}
+
+			#controles{
+				scroll-margin-top:10px;
+			}
+
 			.gamebox{
 				border:4px solid #00ff00;
 				padding:20px;
@@ -147,8 +172,20 @@
 				cursor:pointer;
 			}
 
-			.button:hover{
-				background:#003300;
+			/* Botões-link mantêm o verde em qualquer estado (visitado, clicado, em foco) */
+			.button:link,
+			.button:visited,
+			.button:hover,
+			.button:active,
+			.button:focus{
+				color:#00ff00;
+			}
+
+			/* Destaque ao passar o mouse só em aparelhos com mouse (no celular ele "grudava" depois do toque) */
+			@media (hover:hover){
+				.button:hover{
+					background:#003300;
+				}
 			}
 
 			#versao{
@@ -160,8 +197,25 @@
 				padding:6px;
 			}
 
-			a{
+			/* Links não mudam de cor ao serem visitados ou clicados */
+			a,
+			a:link,
+			a:visited,
+			a:hover,
+			a:active,
+			a:focus{
 				color:#ffff00;
+			}
+
+			/* Sem o "flash" azul do toque no celular e sem contorno após clique do mouse */
+			a,
+			button{
+				-webkit-tap-highlight-color:transparent;
+			}
+
+			a:focus:not(:focus-visible),
+			button:focus:not(:focus-visible){
+				outline:none;
 			}
 
 			footer{
@@ -538,6 +592,10 @@
 
 		<h1>JOGO DA CAVERNA</h1>
 
+		<p class="ir-jogo">
+			<a class="button" href="#controles">Ir para o jogo</a>
+		</p>
+
 		<div class="gamebox">
 
 		<p>
@@ -605,7 +663,7 @@
 
 		</div>
 
-		<h2>Controles:</h2>
+		<h2 id="controles">Controles:</h2>
 
 		<ul>
 			<li>Setas = Movimento</li>
